@@ -4,21 +4,22 @@
   connection: local
 
   tasks:
-  - name: set project Directory
-  set_fact:
-    project_dir: "/home/"
+    - name: set project Directory
+      set_fact:
+        project_dir: "/home/"
 
   roles:
 
     - role: aws
 
-  block:
-  - name: terraform is the way
-    terrafrom: 
-      project_path: "{{project_dir}}"
-      state: present
-      force_init: true
-    register: terraform_output
+    - name: terraform plan block
+      block:
+        - name: terraform is the way
+          terrafrom: 
+            project_path: "{{project_dir}}"
+            state: present
+            force_init: true
+          register: terraform_output
 
 
 
