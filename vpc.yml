@@ -6,7 +6,7 @@
   tasks:
   - name: set project Directory
   set_fact:
-  project_dir: "/home/"
+    project_dir: "/home/"
 
   roles:
 
