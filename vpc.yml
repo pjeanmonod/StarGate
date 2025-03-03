@@ -3,14 +3,14 @@
   gather_facts: false
   connection: local
 
+  roles:
+
+    - role: aws
+
   tasks:
     - name: set project Directory
       set_fact:
         project_dir: "/home/"
-
-  roles:
-
-    - role: aws
 
     - name: terraform plan block
       block:
