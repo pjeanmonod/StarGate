@@ -1,8 +1,24 @@
-##################################################################################
-##      CONFIGURE AWS VPC
-##################################################################################
+---
+- hosts: localhost
+  gather_facts: false
+  connection: local
 
-include: vpcbuild.yml
-with_items:  "{{ job_vars }}"
-when:
-  - item.job_tag == 'vpcbuild'
+  tasks:
+  - name: set project Directory
+  set_fact:
+  project_dir: "/home/"
+
+  roles:
+
+    - role: aws
+
+  block:
+  - name: terraform is the way
+    terrafrom: 
+      project_path: "{{project_dir}}"
+      state: present
+      force_init: true
+    register: terraform_output
+
+
+

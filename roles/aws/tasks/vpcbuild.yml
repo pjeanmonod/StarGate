@@ -1,0 +1,7 @@
+---
+- name: create VPC module
+  block:
+    - name: vpc.tf
+      template:
+        src: vpcbuild.j2
+        dest: /home/vpc.tf
