@@ -8,14 +8,14 @@
     - role: aws
 
   tasks:
-    - name: set project Directory
+    - name: set project directory
       set_fact:
         project_dir: "/home/"
 
     - name: terraform plan block
       block:
         - name: terraform is the way
-          terrafrom: 
+          terraform: 
             project_path: "{{project_dir}}"
             state: present
             force_init: true
