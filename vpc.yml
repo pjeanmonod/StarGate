@@ -16,6 +16,7 @@
         project_dir: "/home/"
 
     - name: terraform plan block
+      community.general.terraform:
       block:
         - name: terraform is the way
           terraform: 
