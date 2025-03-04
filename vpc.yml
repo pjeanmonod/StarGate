@@ -17,13 +17,10 @@
 
     - name: terraform plan block
       community.general.terraform:
-      block:
-        - name: terraform is the way
-          terraform: 
             project_path: "{{project_dir}}"
             state: present
             force_init: true
-          register: terraform_output
+            
 
 
 
