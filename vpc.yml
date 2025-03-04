@@ -3,9 +3,6 @@
   gather_facts: false
   connection: local
 
-  collections:
-    - community.general
-
   roles:
 
     - role: aws
@@ -15,11 +12,12 @@
       set_fact:
         project_dir: "/home/"
 
-    - name: terraform plan block
+    - name: terraform plan 
       community.general.terraform:
-            project_path: "{{project_dir}}"
-            state: present
-            force_init: true
+        project_path: "{{project_dir}}"
+        state: present
+        force_init: true
+      register: plan
             
 
 
