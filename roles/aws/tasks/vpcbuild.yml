@@ -4,4 +4,4 @@
     - name: vpc.tf
       template:
         src: vpcbuild.j2
-        dest: /home/vpc.tf
+        dest: vpc.tf

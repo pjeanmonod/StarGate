@@ -10,7 +10,7 @@
   tasks:
     - name: set project directory
       set_fact:
-        project_dir: "/home/"
+        project_dir: "/"
 
     - name: terraform plan 
       community.general.terraform:
