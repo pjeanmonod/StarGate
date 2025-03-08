@@ -1,7 +1,15 @@
-resource "aws_vpc" "main" {
- cidr_block = "10.0.0.0/16"
- 
- tags = {
+
+# Configure the AWS Provider
+provider "aws" {
+  version = "~> 2.0"
+  region  = "eu-north-1a"
+}
+
+# Create a VPC
+resource "aws_vpc" "example" {
+  cidr_block = "10.0.0.0/16"
+
+   tags = {
    Name = "Project VPC"
  }
 }
