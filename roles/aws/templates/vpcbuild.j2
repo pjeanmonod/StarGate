@@ -1,8 +1,8 @@
 
 # Configure the AWS Provider
 provider "aws" {
-  access_key = "AWS_ACCESS_KEY"
-  secret_key = "AWS_SECRET_KEY"
+  access_key = '{{ lookup("env", "AWS_ACCESS_KEY_ID") }}'
+  secret_key = '{{ lookup("env", "AWS_SECRET_ACCESS_KEY") }}'
   region  = "eu-north-1"
 }
 
