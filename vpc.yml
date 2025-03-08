@@ -10,7 +10,7 @@
   tasks:
     - name: set project directory
       set_fact:
-        project_dir: "/"
+        project_dir: "/data/work"
 
     - name: terraform plan path to access files on 
       community.general.terraform:
