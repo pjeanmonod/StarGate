@@ -12,7 +12,7 @@
       set_fact:
         project_dir: "/data/work"
 
-    - name: terraform plan path to access files on 
+    - name: terraform init and apply
       community.general.terraform:
         project_path: "{{project_dir}}"
         state: present

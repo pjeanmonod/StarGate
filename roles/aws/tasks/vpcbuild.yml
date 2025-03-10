@@ -1,7 +1,7 @@
 ---
 - name: create VPC module
   block:
-    - name: vpc.tf
+    - name: creation of main.tf from jinja source where vars can be ingested
       template:
         src: vpcbuild.j2
         dest: /data/work/main.tf
