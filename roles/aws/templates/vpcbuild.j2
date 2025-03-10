@@ -11,6 +11,6 @@ resource "aws_vpc" "example" {
   cidr_block = "{{ ipv4CIDR }}"
 
    tags = {
-   Name = "Project VPC"
+   Name = "{{ vpcName }}"
  }
 }
