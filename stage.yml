@@ -1,0 +1,25 @@
+---
+- hosts: localhost
+  gather_facts: false
+  connection: local
+
+  roles:
+
+    - role: aws
+
+  tasks:
+    - name: set project directory
+      set_fact:
+        project_dir: "/data/work"
+
+    - name: terraform plan
+      community.general.terraform:
+        project_path: "{{project_dir}}"
+        state: planned
+        force_init: true
+        plan_file: "{{project_dir}}/terraformplan.tfplan"
+      register: plan
+            
+
+
+

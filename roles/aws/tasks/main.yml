@@ -1,3 +1,7 @@
 ---
 
 - include: vpcbuild.yml
+  # with_items: "{{ job_vars }}"
+  # when:
+
+  #   - item.job.tag == 'vpc'
