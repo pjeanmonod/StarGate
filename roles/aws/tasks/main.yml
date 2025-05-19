@@ -1,14 +1,14 @@
 ---
 
 - include: vpcbuild.yml
-  with_items: "{{ awx_request }}"
+  with_items: "{{ extra_vars }}"
   when: 
   
     - item.tags == "aws_vpc"
 
 
 - include: user.yml
-  with_items: "{{ awx_request }}"
+  with_items: "{{ extra_vars }}"
   when: 
   
     - item.tags == "aws_user"
