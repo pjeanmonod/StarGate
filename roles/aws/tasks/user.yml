@@ -1,7 +1,7 @@
 ---
-- name: create VPC module
+- name: create ROUTES module
   block:
     - name: creation of main.tf from jinja source where vars can be ingested
       template:
-        src: vpcbuild.j2
-        dest: /data/work/vpc.tf
+        src: user.j2
+        dest: /data/work/user.tf

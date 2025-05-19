@@ -1,7 +1,17 @@
 ---
 
 - include: vpcbuild.yml
-  # with_items: "{{ job_vars }}"
-  # when:
+  with_items: "{{ job_vars }}"
+  when: 
+  
+    - item.tags == "aws_vpc"
 
-  #   - item.job.tag == 'vpc'
+
+- include: user.yml
+  with_items: "{{ job_vars }}"
+  when: 
+  
+    - item.tags == "aws_user"
+
+- include: provider.yml
+

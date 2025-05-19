@@ -12,14 +12,13 @@
       set_fact:
         project_dir: "/data/work"
 
-    - name: terraform plan
+    - name: terraform plan with target
       community.general.terraform:
         project_path: "{{project_dir}}"
         state: planned
         force_init: true
-        plan_file: "{{project_dir}}/terraformplan.tfplan"
       register: plan
             
-
-
-
+    - name: bob
+      debug:
+        msg: "{{ tags }}"

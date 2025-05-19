@@ -1,0 +1,7 @@
+---
+- name: create provider resource
+  block:
+    - name: creation of provider
+      template:
+        src: provider.j2
+        dest: /data/work/provider.tf
