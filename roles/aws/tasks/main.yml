@@ -16,3 +16,8 @@
 - include: provider.yml
   with_items: "{{ job_vars }}"
 
+- name: Debug each job_var item
+  debug:
+    msg: "Item tags: {{ item.tags }}"
+  with_items: "{{ job_vars }}"
+
