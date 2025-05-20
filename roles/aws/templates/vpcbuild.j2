@@ -1,9 +1,9 @@
 
 # Create a VPC
 resource "aws_vpc" "example" {
-  cidr_block = "{{ ipv4CIDR }}"
+  cidr_block = "{{ item.ipv4CIDR }}"
 
    tags = {
-   Name = "{{ vpcName }}"
+   Name = "{{ item.vpcName }}"
  }
 }
