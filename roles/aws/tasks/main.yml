@@ -1,9 +1,9 @@
 ---
 
-- include: vpcbuild.yml
+- name: include vpc task
+  include_tasks: vpcbuild.yml
   with_items: "{{ job_vars }}"
   when: "'aws_vpc' in item.tags"
-
 
 - name: include user task 
   include_tasks: user.yml
