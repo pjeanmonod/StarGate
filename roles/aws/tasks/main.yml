@@ -7,17 +7,12 @@
     - item.tags == "aws_vpc"
 
 
-- include: user.yml
+- name: include user task 
+  include_tasks: user.yml
   with_items: "{{ job_vars }}"
-  when: 
-  
-    - item.tags == "aws_user"
+  when: "'aws_user' in item.tasks"
 
 - include: provider.yml
   with_items: "{{ job_vars }}"
 
-- name: Debug each job_var item
-  debug:
-    msg: "Item tags: {{ item.tags }}"
-  with_items: "{{ job_vars }}"
 
