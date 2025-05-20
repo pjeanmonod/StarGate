@@ -10,7 +10,7 @@
 - name: include user task 
   include_tasks: user.yml
   with_items: "{{ job_vars }}"
-  when: "'aws_user' in item.tasks"
+  when: "'aws_user' in item.tags"
 
 - include: provider.yml
   with_items: "{{ job_vars }}"
