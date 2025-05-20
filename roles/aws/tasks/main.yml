@@ -1,14 +1,14 @@
 ---
 
 - include: vpcbuild.yml
-  with_items: "{{ extra_vars }}"
+  with_items: "{{ job_vars }}"
   when: 
   
     - item.tags == "aws_vpc"
 
 
 - include: user.yml
-  with_items: "{{ extra_vars }}"
+  with_items: "{{ job_vars }}"
   when: 
   
     - item.tags == "aws_user"
