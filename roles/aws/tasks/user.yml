@@ -1,7 +1,7 @@
 ---
-- name: create ROUTES module
+- name: aws_user
   block:
-    - name: creation of main.tf from jinja source where vars can be ingested
+    - name: creation of IAM user
       template:
         src: user.j2
         dest: /data/work/user.tf

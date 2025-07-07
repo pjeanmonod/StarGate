@@ -1,14 +1,29 @@
 ---
 
-- name: include vpc task
+- name: aws vpc resource task
   include_tasks: vpcbuild.yml
   with_items: "{{ job_vars }}"
   when: "'aws_vpc' in item.tags"
 
-- name: include user task 
+- name: aws user resource task
   include_tasks: user.yml
   with_items: "{{ job_vars }}"
   when: "'aws_user' in item.tags"
+
+- name: aws s3 resource task
+  include_tasks: s3.yml
+  with_items: "{{ job_vars }}"
+  when: "'aws_s3' in item.tags"
+
+- name: aws ec2 resource task
+  include_tasks: ec2.yml
+  with_items: "{{ job_vars }}"
+  when: "'aws_ec2' in item.tags"
+
+- name: aws hub build module task
+  include_tasks: hub.yml
+  with_items: "{{ job_vars }}"
+  when: "'aws_hub' in item.tags"
 
 - include: provider.yml
   with_items: "{{ job_vars }}"

@@ -1,7 +1,7 @@
 ---
-- name: create provider resource
+- name: aws_provider
   block:
-    - name: creation of provider
+    - name: creation of provider config
       template:
         src: provider.j2
         dest: /data/work/provider.tf

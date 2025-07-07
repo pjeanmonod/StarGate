@@ -1,0 +1,7 @@
+---
+- name: aws_s3
+  block:
+    - name: creation of s3 bucket
+      template:
+        src: s3.j2
+        dest: /data/work/s3.tf

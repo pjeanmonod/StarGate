@@ -1,0 +1,7 @@
+---
+- name: aws_ec2
+  block:
+    - name: creation of ec2 instance
+      template:
+        src: ec2.j2
+        dest: /data/work/ec2.tf

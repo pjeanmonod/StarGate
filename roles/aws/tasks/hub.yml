@@ -1,0 +1,11 @@
+---
+- name: aws_vpc
+  block:
+    - name: create VPC resources 
+      template:
+        src: vpcbuild.j2
+        dest: /data/work/hub/vpc.tf
+    - name: create TGW resources
+      template:
+        src: tgw.j2
+        dest: /data/work/hub/tgw.tf
