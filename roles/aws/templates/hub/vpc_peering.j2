@@ -1,0 +1,220 @@
+# ---------- Initiators per region -----------
+resource "aws_vpc_peering_connection" "init_us_east_1" {
+  for_each = lookup(local.peer_req_by_region, "us_east_1", {})
+  provider = aws.us_east_1
+
+  vpc_id      = each.value.requester.core_vpc_id
+  peer_vpc_id = each.value.accepter.core_vpc_id
+
+  # lookup real AWS region name or null if same-region
+  peer_region = lookup(local.region_map, each.value.accepter.region_alias, null)
+  auto_accept = each.value.accepter.region_alias == "us_east_1"
+
+  tags = merge(var.tags, {
+    Name      = "core-peer-${each.key}"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+resource "aws_vpc_peering_connection" "init_eu_west_1" {
+  for_each = lookup(local.peer_req_by_region, "eu_west_1", {})
+  provider = aws.eu_west_1
+
+  vpc_id      = each.value.requester.core_vpc_id
+  peer_vpc_id = each.value.accepter.core_vpc_id
+
+  peer_region = lookup(local.region_map, each.value.accepter.region_alias, null)
+  auto_accept = each.value.accepter.region_alias == "eu_west_1"
+
+  tags = merge(var.tags, {
+    Name      = "core-peer-${each.key}"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+resource "aws_vpc_peering_connection" "init_eu_west_2" {
+  for_each = lookup(local.peer_req_by_region, "eu_west_2", {})
+  provider = aws.eu_west_2
+
+  vpc_id      = each.value.requester.core_vpc_id
+  peer_vpc_id = each.value.accepter.core_vpc_id
+
+  peer_region = lookup(local.region_map, each.value.accepter.region_alias, null)
+  auto_accept = each.value.accepter.region_alias == "eu_west_2"
+
+  tags = merge(var.tags, {
+    Name      = "core-peer-${each.key}"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+resource "aws_vpc_peering_connection" "init_ap_east_1" {
+  for_each = lookup(local.peer_req_by_region, "ap_east_1", {})
+  provider = aws.ap_east_1
+
+  vpc_id      = each.value.requester.core_vpc_id
+  peer_vpc_id = each.value.accepter.core_vpc_id
+
+  peer_region = lookup(local.region_map, each.value.accepter.region_alias, null)
+  auto_accept = each.value.accepter.region_alias == "ap_east_1"
+
+  tags = merge(var.tags, {
+    Name      = "core-peer-${each.key}"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+resource "aws_vpc_peering_connection" "init_ap_northeast_1" {
+  for_each = lookup(local.peer_req_by_region, "ap_northeast_1", {})
+  provider = aws.ap_northeast_1
+
+  vpc_id      = each.value.requester.core_vpc_id
+  peer_vpc_id = each.value.accepter.core_vpc_id
+
+  peer_region = lookup(local.region_map, each.value.accepter.region_alias, null)
+  auto_accept = each.value.accepter.region_alias == "ap_northeast_1"
+
+  tags = merge(var.tags, {
+    Name      = "core-peer-${each.key}"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+resource "aws_vpc_peering_connection" "init_ap_southeast_1" {
+  for_each = lookup(local.peer_req_by_region, "ap_southeast_1", {})
+  provider = aws.ap_southeast_1
+
+  vpc_id      = each.value.requester.core_vpc_id
+  peer_vpc_id = each.value.accepter.core_vpc_id
+
+  peer_region = lookup(local.region_map, each.value.accepter.region_alias, null)
+  auto_accept = each.value.accepter.region_alias == "ap_southeast_1"
+
+  tags = merge(var.tags, {
+    Name      = "core-peer-${each.key}"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+resource "aws_vpc_peering_connection" "init_eu_central_1" {
+  for_each = lookup(local.peer_req_by_region, "eu_central_1", {})
+  provider = aws.eu_central_1
+
+  vpc_id      = each.value.requester.core_vpc_id
+  peer_vpc_id = each.value.accepter.core_vpc_id
+
+  peer_region = lookup(local.region_map, each.value.accepter.region_alias, null)
+  auto_accept = each.value.accepter.region_alias == "eu_central_1"
+
+  tags = merge(var.tags, {
+    Name      = "core-peer-${each.key}"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+
+# ---------- Accepters per region -----------
+resource "aws_vpc_peering_connection_accepter" "acc_us_east_1" {
+  for_each = lookup(local.peer_acc_by_region, "us_east_1", {})
+  provider = aws.us_east_1
+
+  vpc_peering_connection_id = local.all_peer_initiator_ids[each.key]
+  auto_accept               = true
+
+  tags = merge(var.tags, {
+    Name      = "core-peer-accept-${each.key}"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+resource "aws_vpc_peering_connection_accepter" "acc_eu_west_1" {
+  for_each = lookup(local.peer_acc_by_region, "eu_west_1", {})
+  provider = aws.eu_west_1
+
+  vpc_peering_connection_id = local.all_peer_initiator_ids[each.key]
+  auto_accept               = true
+
+  tags = merge(var.tags, {
+    Name      = "core-peer-accept-${each.key}"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+resource "aws_vpc_peering_connection_accepter" "acc_eu_west_2" {
+  for_each = lookup(local.peer_acc_by_region, "eu_west_2", {})
+  provider = aws.eu_west_2
+
+  vpc_peering_connection_id = local.all_peer_initiator_ids[each.key]
+  auto_accept               = true
+
+  tags = merge(var.tags, {
+    Name      = "core-peer-accept-${each.key}"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+resource "aws_vpc_peering_connection_accepter" "acc_ap_east_1" {
+  for_each = lookup(local.peer_acc_by_region, "ap_east_1", {})
+  provider = aws.ap_east_1
+
+  vpc_peering_connection_id = local.all_peer_initiator_ids[each.key]
+  auto_accept               = true
+
+  tags = merge(var.tags, {
+    Name      = "core-peer-accept-${each.key}"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+resource "aws_vpc_peering_connection_accepter" "acc_ap_northeast_1" {
+  for_each = lookup(local.peer_acc_by_region, "ap_northeast_1", {})
+  provider = aws.ap_northeast_1
+
+  vpc_peering_connection_id = local.all_peer_initiator_ids[each.key]
+  auto_accept               = true
+
+  tags = merge(var.tags, {
+    Name      = "core-peer-accept-${each.key}"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+resource "aws_vpc_peering_connection_accepter" "acc_ap_southeast_1" {
+  for_each = lookup(local.peer_acc_by_region, "ap_southeast_1", {})
+  provider = aws.ap_southeast_1
+
+  vpc_peering_connection_id = local.all_peer_initiator_ids[each.key]
+  auto_accept               = true
+
+  tags = merge(var.tags, {
+    Name      = "core-peer-accept-${each.key}"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+resource "aws_vpc_peering_connection_accepter" "acc_eu_central_1" {
+  for_each = lookup(local.peer_acc_by_region, "eu_central_1", {})
+  provider = aws.eu_central_1
+
+  vpc_peering_connection_id = local.all_peer_initiator_ids[each.key]
+  auto_accept               = true
+
+  tags = merge(var.tags, {
+    Name      = "core-peer-accept-${each.key}"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}

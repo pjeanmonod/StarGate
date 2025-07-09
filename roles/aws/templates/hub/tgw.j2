@@ -1,0 +1,673 @@
+# ───────────────────────────────────────────────────────────────────────────────
+# Transit Gateways, Attachments & Route Propagation (Core + Edge) per Region
+# ───────────────────────────────────────────────────────────────────────────────
+# ——— Core TGW + Core→TGW Attachments ———
+
+# us-east-1
+resource "aws_ec2_transit_gateway" "core_tgw_us_east_1" {
+  for_each = lookup(local.core_envs_by_region, "us_east_1", {})
+  provider = aws.us_east_1
+
+  description = "Core TGW for ${each.key}"
+  tags = merge(var.tags, {
+    Name      = "${each.key}-core-tgw"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+resource "aws_ec2_transit_gateway_vpc_attachment" "core_attach_us_east_1" {
+  for_each           = lookup(local.core_envs_by_region, "us_east_1", {})
+  provider           = aws.us_east_1
+  transit_gateway_id = aws_ec2_transit_gateway.core_tgw_us_east_1[each.key].id
+  vpc_id             = each.value.core_vpc_id
+  subnet_ids         = each.value.subnets.core_private
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-core-attach"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+# eu-west-1
+resource "aws_ec2_transit_gateway" "core_tgw_eu_west_1" {
+  for_each = lookup(local.core_envs_by_region, "eu_west_1", {})
+  provider = aws.eu_west_1
+
+  description = "Core TGW for ${each.key}"
+  tags = merge(var.tags, {
+    Name      = "${each.key}-core-tgw"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+resource "aws_ec2_transit_gateway_vpc_attachment" "core_attach_eu_west_1" {
+  for_each           = lookup(local.core_envs_by_region, "eu_west_1", {})
+  provider           = aws.eu_west_1
+  transit_gateway_id = aws_ec2_transit_gateway.core_tgw_eu_west_1[each.key].id
+  vpc_id             = each.value.core_vpc_id
+  subnet_ids         = each.value.subnets.core_private
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-core-attach"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+# ap-east-1
+resource "aws_ec2_transit_gateway" "core_tgw_ap_east_1" {
+  for_each = lookup(local.core_envs_by_region, "ap_east_1", {})
+  provider = aws.ap_east_1
+
+  description = "Core TGW for ${each.key}"
+  tags = merge(var.tags, {
+    Name      = "${each.key}-core-tgw"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+resource "aws_ec2_transit_gateway_vpc_attachment" "core_attach_ap_east_1" {
+  for_each           = lookup(local.core_envs_by_region, "ap_east_1", {})
+  provider           = aws.ap_east_1
+  transit_gateway_id = aws_ec2_transit_gateway.core_tgw_ap_east_1[each.key].id
+  vpc_id             = each.value.core_vpc_id
+  subnet_ids         = each.value.subnets.core_private
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-core-attach"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+# ap-northeast-1
+resource "aws_ec2_transit_gateway" "core_tgw_ap_northeast_1" {
+  for_each = lookup(local.core_envs_by_region, "ap_northeast_1", {})
+  provider = aws.ap_northeast_1
+
+  description = "Core TGW for ${each.key}"
+  tags = merge(var.tags, {
+    Name      = "${each.key}-core-tgw"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+resource "aws_ec2_transit_gateway_vpc_attachment" "core_attach_ap_northeast_1" {
+  for_each           = lookup(local.core_envs_by_region, "ap_northeast_1", {})
+  provider           = aws.ap_northeast_1
+  transit_gateway_id = aws_ec2_transit_gateway.core_tgw_ap_northeast_1[each.key].id
+  vpc_id             = each.value.core_vpc_id
+  subnet_ids         = each.value.subnets.core_private
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-core-attach"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+# ap-southeast-1
+resource "aws_ec2_transit_gateway" "core_tgw_ap_southeast_1" {
+  for_each = lookup(local.core_envs_by_region, "ap_southeast_1", {})
+
+  provider = aws.ap_southeast_1
+
+  description = "Core TGW for ${each.key}"
+  tags = merge(var.tags, {
+    Name      = "${each.key}-core-tgw"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+resource "aws_ec2_transit_gateway_vpc_attachment" "core_attach_ap_southeast_1" {
+  for_each           = lookup(local.core_envs_by_region, "ap_southeast_1", {})
+  provider           = aws.ap_southeast_1
+  transit_gateway_id = aws_ec2_transit_gateway.core_tgw_ap_southeast_1[each.key].id
+  vpc_id             = each.value.core_vpc_id
+  subnet_ids         = each.value.subnets.core_private
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-core-attach"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+# eu-central-1
+resource "aws_ec2_transit_gateway" "core_tgw_eu_central_1" {
+  for_each = lookup(local.core_envs_by_region, "eu_central_1", {})
+  provider = aws.eu_central_1
+
+  description = "Core TGW for ${each.key}"
+  tags = merge(var.tags, {
+    Name      = "${each.key}-core-tgw"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+resource "aws_ec2_transit_gateway_vpc_attachment" "core_attach_eu_central_1" {
+  for_each           = lookup(local.core_envs_by_region, "eu_central_1", {})
+  provider           = aws.eu_central_1
+  transit_gateway_id = aws_ec2_transit_gateway.core_tgw_eu_central_1[each.key].id
+  vpc_id             = each.value.core_vpc_id
+  subnet_ids         = each.value.subnets.core_private
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-core-attach"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+# eu-west-2
+resource "aws_ec2_transit_gateway" "core_tgw_eu_west_2" {
+  for_each = lookup(local.core_envs_by_region, "eu_west_2", {})
+  provider = aws.eu_west_2
+
+  description = "Core TGW for ${each.key}"
+  tags = merge(var.tags, {
+    Name      = "${each.key}-core-tgw"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+resource "aws_ec2_transit_gateway_vpc_attachment" "core_attach_eu_west_2" {
+  for_each           = lookup(local.core_envs_by_region, "eu_west_2", {})
+  provider           = aws.eu_west_2
+  transit_gateway_id = aws_ec2_transit_gateway.core_tgw_eu_west_2[each.key].id
+  vpc_id             = each.value.core_vpc_id
+  subnet_ids         = each.value.subnets.core_private
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-core-attach"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+
+# ——— Edge TGW + Edge→TGW Attachments ———
+
+# us-east-1
+resource "aws_ec2_transit_gateway" "edge_tgw_us_east_1" {
+  for_each = lookup(local.edge_envs_by_region, "us_east_1", {})
+  provider = aws.us_east_1
+
+  description = "Edge TGW for ${each.key}"
+  tags = merge(var.tags, {
+    Name      = "${each.key}-edge-tgw"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+resource "aws_ec2_transit_gateway_vpc_attachment" "edge_attach_us_east_1" {
+  for_each           = lookup(local.edge_envs_by_region, "us_east_1", {})
+  provider           = aws.us_east_1
+  transit_gateway_id = aws_ec2_transit_gateway.edge_tgw_us_east_1[each.key].id
+  vpc_id             = each.value.edge_vpc_id
+  subnet_ids         = each.value.subnets.edge_public
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-edge-attach"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+# eu-west-1
+resource "aws_ec2_transit_gateway" "edge_tgw_eu_west_1" {
+  for_each = lookup(local.edge_envs_by_region, "eu_west_1", {})
+  provider = aws.eu_west_1
+
+  description = "Edge TGW for ${each.key}"
+  tags = merge(var.tags, {
+    Name      = "${each.key}-edge-tgw"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+resource "aws_ec2_transit_gateway_vpc_attachment" "edge_attach_eu_west_1" {
+  for_each           = lookup(local.edge_envs_by_region, "eu_west_1", {})
+  provider           = aws.eu_west_1
+  transit_gateway_id = aws_ec2_transit_gateway.edge_tgw_eu_west_1[each.key].id
+  vpc_id             = each.value.edge_vpc_id
+  subnet_ids         = each.value.subnets.edge_public
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-edge-attach"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+# ap-east-1
+resource "aws_ec2_transit_gateway" "edge_tgw_ap_east_1" {
+  for_each = lookup(local.edge_envs_by_region, "ap_east_1", {})
+  provider = aws.ap_east_1
+
+  description = "Edge TGW for ${each.key}"
+  tags = merge(var.tags, {
+    Name      = "${each.key}-edge-tgw"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+resource "aws_ec2_transit_gateway_vpc_attachment" "edge_attach_ap_east_1" {
+  for_each           = lookup(local.edge_envs_by_region, "ap_east_1", {})
+  provider           = aws.ap_east_1
+  transit_gateway_id = aws_ec2_transit_gateway.edge_tgw_ap_east_1[each.key].id
+  vpc_id             = each.value.edge_vpc_id
+  subnet_ids         = each.value.subnets.edge_public
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-edge-attach"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+# ap-northeast-1
+resource "aws_ec2_transit_gateway" "edge_tgw_ap_northeast_1" {
+  for_each = lookup(local.edge_envs_by_region, "ap_northeast_1", {})
+  provider = aws.ap_northeast_1
+
+  description = "Edge TGW for ${each.key}"
+  tags = merge(var.tags, {
+    Name      = "${each.key}-edge-tgw"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+resource "aws_ec2_transit_gateway_vpc_attachment" "edge_attach_ap_northeast_1" {
+  for_each           = lookup(local.edge_envs_by_region, "ap_northeast_1", {})
+  provider           = aws.ap_northeast_1
+  transit_gateway_id = aws_ec2_transit_gateway.edge_tgw_ap_northeast_1[each.key].id
+  vpc_id             = each.value.edge_vpc_id
+  subnet_ids         = each.value.subnets.edge_public
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-edge-attach"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+# ap-southeast-1
+resource "aws_ec2_transit_gateway" "edge_tgw_ap_southeast_1" {
+  for_each = lookup(local.edge_envs_by_region, "ap_southeast_1", {})
+  provider = aws.ap_southeast_1
+
+  description = "Edge TGW for ${each.key}"
+  tags = merge(var.tags, {
+    Name      = "${each.key}-edge-tgw"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+resource "aws_ec2_transit_gateway_vpc_attachment" "edge_attach_ap_southeast_1" {
+  for_each           = lookup(local.edge_envs_by_region, "ap_southeast_1", {})
+  provider           = aws.ap_southeast_1
+  transit_gateway_id = aws_ec2_transit_gateway.edge_tgw_ap_southeast_1[each.key].id
+  vpc_id             = each.value.edge_vpc_id
+  subnet_ids         = each.value.subnets.edge_public
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-edge-attach"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+# eu-central-1
+resource "aws_ec2_transit_gateway" "edge_tgw_eu_central_1" {
+  for_each = lookup(local.edge_envs_by_region, "eu_central_1", {})
+  provider = aws.eu_central_1
+
+  description = "Edge TGW for ${each.key}"
+  tags = merge(var.tags, {
+    Name      = "${each.key}-edge-tgw"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+resource "aws_ec2_transit_gateway_vpc_attachment" "edge_attach_eu_central_1" {
+  for_each           = lookup(local.edge_envs_by_region, "eu_central_1", {})
+  provider           = aws.eu_central_1
+  transit_gateway_id = aws_ec2_transit_gateway.edge_tgw_eu_central_1[each.key].id
+  vpc_id             = each.value.edge_vpc_id
+  subnet_ids         = each.value.subnets.edge_public
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-edge-attach"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+# eu-west-2
+resource "aws_ec2_transit_gateway" "edge_tgw_eu_west_2" {
+  for_each = lookup(local.edge_envs_by_region, "eu_west_2", {})
+  provider = aws.eu_west_2
+
+  description = "Edge TGW for ${each.key}"
+  tags = merge(var.tags, {
+    Name      = "${each.key}-edge-tgw"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+resource "aws_ec2_transit_gateway_vpc_attachment" "edge_attach_eu_west_2" {
+  for_each           = lookup(local.edge_envs_by_region, "eu_west_2", {})
+  provider           = aws.eu_west_2
+  transit_gateway_id = aws_ec2_transit_gateway.edge_tgw_eu_west_2[each.key].id
+  vpc_id             = each.value.edge_vpc_id
+  subnet_ids         = each.value.subnets.edge_public
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-edge-attach"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+# ───────────────────────────────────────────────────────────────
+# Shared TGW Route Tables (one per region)
+# ───────────────────────────────────────────────────────────────
+
+# us-east-1 (US East – N. Virginia)
+resource "aws_ec2_transit_gateway_route_table" "shared_us_east_1" {
+  for_each           = lookup(local.core_envs_by_region, "us_east_1", {})
+  provider           = aws.us_east_1
+  transit_gateway_id = values(aws_ec2_transit_gateway.core_tgw_us_east_1)[0].id
+
+  tags = merge(var.tags, {
+    Name      = "shared-tgw-rt-us-east-1"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+resource "aws_route" "private_to_tgw_us_east_1" {
+  for_each = lookup(local.core_envs_by_region, "us_east_1", {})
+
+  provider               = aws.us_east_1
+  route_table_id         = each.value.route_tables.core.private
+  destination_cidr_block = "0.0.0.0/0"
+  transit_gateway_id     = values(aws_ec2_transit_gateway.core_tgw_us_east_1)[0].id
+}
+
+# eu-west-1 (Europe – Ireland)
+resource "aws_ec2_transit_gateway_route_table" "shared_eu_west_1" {
+  for_each           = lookup(local.core_envs_by_region, "eu_west_1", {})
+  provider           = aws.eu_west_1
+  transit_gateway_id = values(aws_ec2_transit_gateway.core_tgw_eu_west_1)[0].id
+
+  tags = merge(var.tags, {
+    Name      = "shared-tgw-rt-eu-west-1"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+resource "aws_route" "private_to_tgw_eu_west_1" {
+  for_each = lookup(local.core_envs_by_region, "eu_west_1", {})
+
+  provider               = aws.eu_west_1
+  route_table_id         = each.value.route_tables.core.private
+  destination_cidr_block = "0.0.0.0/0"
+  transit_gateway_id     = values(aws_ec2_transit_gateway.core_tgw_eu_west_1)[0].id
+}
+
+# eu-west-2 (Europe – London)
+resource "aws_ec2_transit_gateway_route_table" "shared_eu_west_2" {
+  for_each           = lookup(local.core_envs_by_region, "eu_west_2", {})
+  provider           = aws.eu_west_2
+  transit_gateway_id = values(aws_ec2_transit_gateway.core_tgw_eu_west_2)[0].id
+
+  tags = merge(var.tags, {
+    Name      = "shared-tgw-rt-eu-west-2"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+resource "aws_route" "private_to_tgw_eu_west_2" {
+  for_each = lookup(local.core_envs_by_region, "eu_west_2", {})
+
+  provider               = aws.eu_west_2
+  route_table_id         = each.value.route_tables.core.private
+  destination_cidr_block = "0.0.0.0/0"
+  transit_gateway_id     = values(aws_ec2_transit_gateway.core_tgw_eu_west_2)[0].id
+}
+
+# eu-central-1 (Europe – Frankfurt)
+resource "aws_ec2_transit_gateway_route_table" "shared_eu_central_1" {
+  for_each           = lookup(local.core_envs_by_region, "eu_central_1", {})
+  provider           = aws.eu_central_1
+  transit_gateway_id = values(aws_ec2_transit_gateway.core_tgw_eu_central_1)[0].id
+
+  tags = merge(var.tags, {
+    Name      = "shared-tgw-rt-eu-central-1"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+resource "aws_route" "private_to_tgw_eu_central_1" {
+  for_each = lookup(local.core_envs_by_region, "eu_central_1", {})
+
+  provider               = aws.eu_central_1
+  route_table_id         = each.value.route_tables.core.private
+  destination_cidr_block = "0.0.0.0/0"
+  transit_gateway_id     = values(aws_ec2_transit_gateway.core_tgw_eu_central_1)[0].id
+}
+
+# ap-east-1 (Asia Pacific – Hong Kong)
+resource "aws_ec2_transit_gateway_route_table" "shared_ap_east_1" {
+  for_each           = lookup(local.core_envs_by_region, "ap_east_1", {})
+  provider           = aws.ap_east_1
+  transit_gateway_id = values(aws_ec2_transit_gateway.core_tgw_ap_east_1)[0].id
+
+  tags = merge(var.tags, {
+    Name      = "shared-tgw-rt-ap-east-1"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+resource "aws_route" "private_to_tgw_ap_east_1" {
+  for_each = lookup(local.core_envs_by_region, "ap_east_1", {})
+
+  provider               = aws.ap_east_1
+  route_table_id         = each.value.route_tables.core.private
+  destination_cidr_block = "0.0.0.0/0"
+  transit_gateway_id     = values(aws_ec2_transit_gateway.core_tgw_ap_east_1)[0].id
+}
+
+# ap-northeast-1 (Asia Pacific – Tokyo)
+resource "aws_ec2_transit_gateway_route_table" "shared_ap_northeast_1" {
+  for_each           = lookup(local.core_envs_by_region, "ap_northeast_1", {})
+  provider           = aws.ap_northeast_1
+  transit_gateway_id = values(aws_ec2_transit_gateway.core_tgw_ap_northeast_1)[0].id
+
+  tags = merge(var.tags, {
+    Name      = "shared-tgw-rt-ap-northeast-1"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+resource "aws_route" "private_to_tgw_ap_northeast_1" {
+  for_each = lookup(local.core_envs_by_region, "ap_northeast_1", {})
+
+  provider               = aws.ap_northeast_1
+  route_table_id         = each.value.route_tables.core.private
+  destination_cidr_block = "0.0.0.0/0"
+  transit_gateway_id     = values(aws_ec2_transit_gateway.core_tgw_ap_northeast_1)[0].id
+}
+
+# ap-southeast-1 (Asia Pacific – Singapore)
+resource "aws_ec2_transit_gateway_route_table" "shared_ap_southeast_1" {
+  for_each           = lookup(local.core_envs_by_region, "ap_southeast_1", {})
+  provider           = aws.ap_southeast_1
+  transit_gateway_id = values(aws_ec2_transit_gateway.core_tgw_ap_southeast_1)[0].id
+
+  tags = merge(var.tags, {
+    Name      = "shared-tgw-rt-ap-southeast-1"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+resource "aws_route" "private_to_tgw_ap_southeast_1" {
+  for_each = lookup(local.core_envs_by_region, "ap_southeast_1", {})
+
+  provider               = aws.ap_southeast_1
+  route_table_id         = each.value.route_tables.core.private
+  destination_cidr_block = "0.0.0.0/0"
+  transit_gateway_id     = values(aws_ec2_transit_gateway.core_tgw_ap_southeast_1)[0].id
+}
+
+# ────────────────────────────────────────────────────────────────
+# Transit-Gateway Route Propagation (Core + Edge)
+# ────────────────────────────────────────────────────────────────
+
+# ─── Core‐TGW Route Propagation (us-east-1) ───────────────────────
+resource "aws_ec2_transit_gateway_route_table_propagation" "core_private_prop_us_east_1" {
+  for_each = lookup(local.core_envs_by_region, "us_east_1", {})
+
+  provider                       = aws.us_east_1
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.shared_us_east_1[each.key].id
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.core_attach_us_east_1[each.key].id
+}
+
+# ─── Edge‐TGW Route Propagation (us-east-1) ───────────────────────
+resource "aws_ec2_transit_gateway_route_table_propagation" "edge_private_prop_us_east_1" {
+  for_each = lookup(local.edge_envs_by_region, "us_east_1", {})
+
+  provider                       = aws.us_east_1
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.shared_us_east_1[each.key].id
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.edge_attach_us_east_1[each.key].id
+}
+
+# ─── Core‐TGW Route Propagation (eu-west-1) ───────────────────────
+resource "aws_ec2_transit_gateway_route_table_propagation" "core_private_prop_eu_west_1" {
+  for_each = lookup(local.core_envs_by_region, "eu_west_1", {})
+
+  provider                       = aws.eu_west_1
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.shared_eu_west_1[each.key].id
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.core_attach_eu_west_1[each.key].id
+}
+
+# ─── Edge‐TGW Route Propagation (eu-west-1) ───────────────────────
+resource "aws_ec2_transit_gateway_route_table_propagation" "edge_private_prop_eu_west_1" {
+  for_each = lookup(local.edge_envs_by_region, "eu_west_1", {})
+
+  provider                       = aws.eu_west_1
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.shared_eu_west_1[each.key].id
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.edge_attach_eu_west_1[each.key].id
+}
+
+# ─── Core‐TGW Route Propagation (eu-west-2) ───────────────────────
+resource "aws_ec2_transit_gateway_route_table_propagation" "core_private_prop_eu_west_2" {
+  for_each = lookup(local.core_envs_by_region, "eu_west_2", {})
+
+  provider                       = aws.eu_west_2
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.shared_eu_west_2[each.key].id
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.core_attach_eu_west_2[each.key].id
+}
+
+# ─── Edge‐TGW Route Propagation (eu-west-2) ───────────────────────
+resource "aws_ec2_transit_gateway_route_table_propagation" "edge_private_prop_eu_west_2" {
+  for_each = lookup(local.edge_envs_by_region, "eu_west_2", {})
+
+  provider                       = aws.eu_west_2
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.shared_eu_west_2[each.key].id
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.edge_attach_eu_west_2[each.key].id
+}
+
+# ─── Core‐TGW Route Propagation (eu-central-1) ─────────────────────
+resource "aws_ec2_transit_gateway_route_table_propagation" "core_private_prop_eu_central_1" {
+  for_each = lookup(local.core_envs_by_region, "eu_central_1", {})
+
+  provider                       = aws.eu_central_1
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.shared_eu_central_1[each.key].id
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.core_attach_eu_central_1[each.key].id
+}
+
+# ─── Edge‐TGW Route Propagation (eu-central-1) ─────────────────────
+resource "aws_ec2_transit_gateway_route_table_propagation" "edge_private_prop_eu_central_1" {
+  for_each = lookup(local.edge_envs_by_region, "eu_central_1", {})
+
+  provider                       = aws.eu_central_1
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.shared_eu_central_1[each.key].id
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.edge_attach_eu_central_1[each.key].id
+}
+
+# ─── Core‐TGW Route Propagation (ap-east-1) ───────────────────────
+resource "aws_ec2_transit_gateway_route_table_propagation" "core_private_prop_ap_east_1" {
+  for_each = lookup(local.core_envs_by_region, "ap_east_1", {})
+
+  provider                       = aws.ap_east_1
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.shared_ap_east_1[each.key].id
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.core_attach_ap_east_1[each.key].id
+}
+
+# ─── Edge‐TGW Route Propagation (ap-east-1) ───────────────────────
+resource "aws_ec2_transit_gateway_route_table_propagation" "edge_private_prop_ap_east_1" {
+  for_each = lookup(local.edge_envs_by_region, "ap_east_1", {})
+
+  provider                       = aws.ap_east_1
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.shared_ap_east_1[each.key].id
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.edge_attach_ap_east_1[each.key].id
+}
+
+# ─── Core‐TGW Route Propagation (ap-northeast-1) ───────────────────
+resource "aws_ec2_transit_gateway_route_table_propagation" "core_private_prop_ap_northeast_1" {
+  for_each                       = lookup(local.core_envs_by_region, "ap_northeast_1", {})
+  provider                       = aws.ap_northeast_1
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.shared_ap_northeast_1[each.key].id
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.core_attach_ap_northeast_1[each.key].id
+}
+
+# ─── Edge‐TGW Route Propagation (ap-northeast-1) ───────────────────
+resource "aws_ec2_transit_gateway_route_table_propagation" "edge_private_prop_ap_northeast_1" {
+  for_each = lookup(local.edge_envs_by_region, "ap_northeast_1", {})
+
+  provider                       = aws.ap_northeast_1
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.shared_ap_northeast_1[each.key].id
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.edge_attach_ap_northeast_1[each.key].id
+}
+
+# ─── Core‐TGW Route Propagation (ap-southeast-1) ───────────────────
+resource "aws_ec2_transit_gateway_route_table_propagation" "core_private_prop_ap_southeast_1" {
+  for_each = lookup(local.core_envs_by_region, "ap_southeast_1", {})
+
+  provider                       = aws.ap_southeast_1
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.shared_ap_southeast_1[each.key].id
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.core_attach_ap_southeast_1[each.key].id
+}
+
+# ─── Edge‐TGW Route Propagation (ap-southeast-1) ───────────────────
+resource "aws_ec2_transit_gateway_route_table_propagation" "edge_private_prop_ap_southeast_1" {
+  for_each = lookup(local.edge_envs_by_region, "ap_southeast_1", {})
+
+  provider                       = aws.ap_southeast_1
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.shared_ap_southeast_1[each.key].id
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.edge_attach_ap_southeast_1[each.key].id
+}

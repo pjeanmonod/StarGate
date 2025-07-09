@@ -1,0 +1,88 @@
+locals {
+  # Sort your env keys once
+  sorted_region_setups = sort(keys(var.region_setups))
+
+  # Build every unique Core–Core peering pair (A < B to avoid dupes)
+  peering_pairs = {
+    for pair in setproduct(keys(var.region_setups), keys(var.region_setups)) :
+    "${pair[0]}-${pair[1]}" => {
+      requester = var.region_setups[pair[0]]
+      accepter  = var.region_setups[pair[1]]
+    }
+    if pair[0] != pair[1] && pair[0] == sort([pair[0], pair[1]])[0]
+  }
+
+  # “Requester” peering grouped by region_alias (for initiator resources)
+  peer_req_by_region = {
+    for alias in distinct([
+      for p in values(local.peering_pairs) : p.requester.region_alias
+    ]) :
+    alias => {
+      for k, p in local.peering_pairs : k => p
+      if p.requester.region_alias == alias
+    }
+  }
+
+  # “Accepter” peering grouped by region_alias (for accepter resources)
+  peer_acc_by_region = {
+    for alias in distinct([
+      for p in values(local.peering_pairs) : p.accepter.region_alias
+    ]) :
+    alias => {
+      for k, p in local.peering_pairs : k => p
+      if p.accepter.region_alias == alias && p.requester.region_alias != alias
+    }
+  }
+
+  # Flatten every "init_*" resource into one map: pair_key → connection_id
+  all_peer_initiator_ids = merge(
+    { for k, v in aws_vpc_peering_connection.init_us_east_1 : k => v.id },
+    { for k, v in aws_vpc_peering_connection.init_eu_west_1 : k => v.id },
+    { for k, v in aws_vpc_peering_connection.init_eu_west_2 : k => v.id },
+    { for k, v in aws_vpc_peering_connection.init_ap_east_1 : k => v.id },
+    { for k, v in aws_vpc_peering_connection.init_ap_northeast_1 : k => v.id },
+    { for k, v in aws_vpc_peering_connection.init_ap_southeast_1 : k => v.id },
+    { for k, v in aws_vpc_peering_connection.init_eu_central_1 : k => v.id }
+  )
+
+  # Map your provider‐alias names to real AWS region strings
+  region_map = {
+    us_east_1      = "us-east-1"
+    eu_west_1      = "eu-west-1"
+    eu_west_2      = "eu-west-2"
+    ap_east_1      = "ap-east-1"
+    ap_northeast_1 = "ap-northeast-1"
+    ap_southeast_1 = "ap-southeast-1"
+    eu_central_1   = "eu-central-1"
+  }
+
+  # Group all environments by region_alias (for TGW & DX blocks)
+  envs_by_region = {
+    for alias in distinct([
+      for e in values(var.region_setups) : e.region_alias
+    ]) :
+    alias => {
+      for k, e in var.region_setups : k => e
+      if e.region_alias == alias
+    }
+  }
+
+  core_envs_by_region = var.enable_core_tgw ? local.envs_by_region : {}
+  edge_envs_by_region = var.enable_edge_tgw ? local.envs_by_region : {}
+  dx_envs_by_region   = (var.enable_core_tgw && var.enable_direct_connect) ? local.envs_by_region : {}
+
+  peer_regions = distinct(
+    concat(
+      keys(local.peer_req_by_region),
+      keys(local.peer_acc_by_region),
+    )
+  )
+
+  # Flatten every Core VPC’s primary & secondary CIDR for SG rules
+  all_core_vpc_cidrs = distinct(flatten([
+    for env in values(var.region_setups) : [
+      env.primary_cidrs.core,
+      env.secondary_cidrs.core,
+    ]
+  ]))
+}

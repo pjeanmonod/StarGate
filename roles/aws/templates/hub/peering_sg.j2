@@ -1,0 +1,204 @@
+// Security Groups for Core–Core VPC Peering
+
+// us-east-1
+resource "aws_security_group" "core_peer_us_east_1" {
+  for_each = contains(local.peer_regions, "us_east_1") ? lookup(local.envs_by_region, "us_east_1", {}) : {}
+
+  provider    = aws.us_east_1
+  name        = "${each.key}-core-peer-sg"
+  description = "Allow Core-Core peering in us-east-1"
+  vpc_id      = each.value.core_vpc_id
+
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = local.all_core_vpc_cidrs
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = local.all_core_vpc_cidrs
+  }
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-core-peer-sg"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+// eu-west-1
+resource "aws_security_group" "core_peer_eu_west_1" {
+  for_each = contains(local.peer_regions, "eu_west_1") ? lookup(local.envs_by_region, "eu_west_1", {}) : {}
+
+  provider    = aws.eu_west_1
+  name        = "${each.key}-core-peer-sg"
+  description = "Allow Core-Core peering in eu-west-1"
+  vpc_id      = each.value.core_vpc_id
+
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = local.all_core_vpc_cidrs
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = local.all_core_vpc_cidrs
+  }
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-core-peer-sg"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+// eu-west-2
+resource "aws_security_group" "core_peer_eu_west_2" {
+  for_each = contains(local.peer_regions, "eu_west_2") ? lookup(local.envs_by_region, "eu_west_2", {}) : {}
+
+  provider    = aws.eu_west_2
+  name        = "${each.key}-core-peer-sg"
+  description = "Allow Core-Core peering in eu-west-2"
+  vpc_id      = each.value.core_vpc_id
+
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = local.all_core_vpc_cidrs
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = local.all_core_vpc_cidrs
+  }
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-core-peer-sg"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+// ap-east-1
+resource "aws_security_group" "core_peer_ap_east_1" {
+  for_each = contains(local.peer_regions, "ap_east_1") ? lookup(local.envs_by_region, "ap_east_1", {}) : {}
+
+  provider    = aws.ap_east_1
+  name        = "${each.key}-core-peer-sg"
+  description = "Allow Core-Core peering in ap-east-1"
+  vpc_id      = each.value.core_vpc_id
+
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = local.all_core_vpc_cidrs
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = local.all_core_vpc_cidrs
+  }
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-core-peer-sg"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+// ap-northeast-1
+resource "aws_security_group" "core_peer_ap_northeast_1" {
+  for_each = contains(local.peer_regions, "ap_northeast_1") ? lookup(local.envs_by_region, "ap_northeast_1", {}) : {}
+
+  provider    = aws.ap_northeast_1
+  name        = "${each.key}-core-peer-sg"
+  description = "Allow Core-Core peering in ap-northeast-1"
+  vpc_id      = each.value.core_vpc_id
+
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = local.all_core_vpc_cidrs
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = local.all_core_vpc_cidrs
+  }
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-core-peer-sg"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+// ap-southeast-1
+resource "aws_security_group" "core_peer_ap_southeast_1" {
+  for_each = contains(local.peer_regions, "ap_southeast_1") ? lookup(local.envs_by_region, "ap_southeast_1", {}) : {}
+
+  provider    = aws.ap_southeast_1
+  name        = "${each.key}-core-peer-sg"
+  description = "Allow Core-Core peering in ap-southeast-1"
+  vpc_id      = each.value.core_vpc_id
+
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = local.all_core_vpc_cidrs
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = local.all_core_vpc_cidrs
+  }
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-core-peer-sg"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+// eu-central-1
+resource "aws_security_group" "core_peer_eu_central_1" {
+  for_each = contains(local.peer_regions, "eu_central_1") ? lookup(local.envs_by_region, "eu_central_1", {}) : {}
+
+  provider    = aws.eu_central_1
+  name        = "${each.key}-core-peer-sg"
+  description = "Allow Core-Core peering in eu-central-1"
+  vpc_id      = each.value.core_vpc_id
+
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = local.all_core_vpc_cidrs
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = local.all_core_vpc_cidrs
+  }
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-core-peer-sg"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}

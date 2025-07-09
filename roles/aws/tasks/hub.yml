@@ -1,11 +1,27 @@
 ---
 - name: aws_vpc
   block:
-    - name: create VPC resources 
+    - name: create vpcs
       template:
-        src: vpcbuild.j2
+        src: /hub/vpcbuild.j2
         dest: /data/work/hub/vpc.tf
-    - name: create TGW resources
+    - name: create transit gateways 
       template:
-        src: tgw.j2
-        dest: /data/work/hub/tgw.tf
+        src: /hub/tgw.j2
+        dest: /data/work/hub/tgw.tf 
+    - name: create locals
+      template:
+        src: /hub/locals.j2
+        dest: /data/work/hub/locals.tf
+    - name: create direct connect
+      template:
+        src: /hub/direct_connect.j2
+        dest: /data/work/hub/direct_connect.tf
+    - name: create peering_sg
+      template:
+        src: /hub/peering_sg.j2
+        dest: /data/work/hub/peering_sg.tf
+    - name: create tgw_sg
+      template:
+        src: /hub/tgw_sg.j2
+        dest: /data/work/hub/tgw_sg.tf

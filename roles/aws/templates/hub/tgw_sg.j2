@@ -1,0 +1,507 @@
+
+locals {
+  core_regions = var.enable_core_tgw ? keys(local.envs_by_region) : []
+  edge_regions = var.enable_edge_tgw ? keys(local.envs_by_region) : []
+}
+
+# ───── Core‐TGW Security Groups ─────────────────────────────────────────────
+
+# us-east-1
+resource "aws_security_group" "core_tgw_us_east_1" {
+  for_each = contains(local.core_regions, "us_east_1") ? lookup(local.envs_by_region, "us_east_1", {}) : {}
+
+  provider    = aws.us_east_1
+  name        = "${each.key}-core-tgw-sg"
+  description = "Allow ONLY CIDRs to Core TGW in us-east-1"
+  vpc_id      = each.value.core_vpc_id
+
+
+  dynamic "ingress" {
+    for_each = var.core_tgw_cidrs
+    content {
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = [ingress.value]
+    }
+  }
+
+  dynamic "egress" {
+    for_each = var.core_tgw_cidrs
+    content {
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = [egress.value]
+    }
+  }
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-core-tgw-sg"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+# eu-west-1
+resource "aws_security_group" "core_tgw_eu_west_1" {
+  for_each = contains(local.core_regions, "eu_west_1") ? lookup(local.envs_by_region, "eu_west_1", {}) : {}
+
+  provider    = aws.eu_west_1
+  name        = "${each.key}-core-tgw-sg"
+  description = "Allow ONLY CIDRs to Core TGW in eu-west-1"
+  vpc_id      = each.value.core_vpc_id
+
+  dynamic "ingress" {
+    for_each = var.core_tgw_cidrs
+    content {
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = [ingress.value]
+    }
+  }
+  dynamic "egress" {
+    for_each = var.core_tgw_cidrs
+    content {
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = [egress.value]
+    }
+  }
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-core-tgw-sg"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+# eu-west-2
+resource "aws_security_group" "core_tgw_eu_west_2" {
+  for_each = contains(local.core_regions, "eu_west_2") ? lookup(local.envs_by_region, "eu_west_2", {}) : {}
+
+  provider    = aws.eu_west_2
+  name        = "${each.key}-core-tgw-sg"
+  description = "Allow ONLY CIDRs to Core TGW in eu-west-2"
+  vpc_id      = each.value.core_vpc_id
+
+  dynamic "ingress" {
+    for_each = var.core_tgw_cidrs
+    content {
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = [ingress.value]
+    }
+  }
+  dynamic "egress" {
+    for_each = var.core_tgw_cidrs
+    content {
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = [egress.value]
+    }
+  }
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-core-tgw-sg"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+# ap-east-1
+resource "aws_security_group" "core_tgw_ap_east_1" {
+  for_each = contains(local.core_regions, "ap_east_1") ? lookup(local.envs_by_region, "ap_east_1", {}) : {}
+
+  provider    = aws.ap_east_1
+  name        = "${each.key}-core-tgw-sg"
+  description = "Allow ONLY CIDRs to Core TGW in ap-east-1"
+  vpc_id      = each.value.core_vpc_id
+
+  dynamic "ingress" {
+    for_each = var.core_tgw_cidrs
+    content {
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = [ingress.value]
+    }
+  }
+  dynamic "egress" {
+    for_each = var.core_tgw_cidrs
+    content {
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = [egress.value]
+    }
+  }
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-core-tgw-sg"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+# ap-northeast-1
+resource "aws_security_group" "core_tgw_ap_northeast_1" {
+  for_each = contains(local.core_regions, "ap_northeast_1") ? lookup(local.envs_by_region, "ap_northeast_1", {}) : {}
+
+  provider    = aws.ap_northeast_1
+  name        = "${each.key}-core-tgw-sg"
+  description = "Allow ONLY CIDRs to Core TGW in ap-northeast-1"
+  vpc_id      = each.value.core_vpc_id
+
+  dynamic "ingress" {
+    for_each = var.core_tgw_cidrs
+    content {
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = [ingress.value]
+    }
+  }
+  dynamic "egress" {
+    for_each = var.core_tgw_cidrs
+    content {
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = [egress.value]
+    }
+  }
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-core-tgw-sg"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+# ap-southeast-1
+resource "aws_security_group" "core_tgw_ap_southeast_1" {
+  for_each = contains(local.core_regions, "ap_southeast_1") ? lookup(local.envs_by_region, "ap_southeast_1", {}) : {}
+
+  provider    = aws.ap_southeast_1
+  name        = "${each.key}-core-tgw-sg"
+  description = "Allow ONLY CIDRs to Core TGW in ap-southeast-1"
+  vpc_id      = each.value.core_vpc_id
+
+  dynamic "ingress" {
+    for_each = var.core_tgw_cidrs
+    content {
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = [ingress.value]
+    }
+  }
+  dynamic "egress" {
+    for_each = var.core_tgw_cidrs
+    content {
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = [egress.value]
+    }
+  }
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-core-tgw-sg"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+# eu-central-1
+resource "aws_security_group" "core_tgw_eu_central_1" {
+  for_each = contains(local.core_regions, "eu_central_1") ? lookup(local.envs_by_region, "eu_central_1", {}) : {}
+
+  provider    = aws.eu_central_1
+  name        = "${each.key}-core-tgw-sg"
+  description = "Allow ONLY CIDRs to Core TGW in eu-central-1"
+  vpc_id      = each.value.core_vpc_id
+
+  dynamic "ingress" {
+    for_each = var.core_tgw_cidrs
+    content {
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = [ingress.value]
+    }
+  }
+  dynamic "egress" {
+    for_each = var.core_tgw_cidrs
+    content {
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = [egress.value]
+    }
+  }
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-core-tgw-sg"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+# ───── Edge-TGW Security Groups ───────────────────────────────────────────────
+
+# us-east-1
+resource "aws_security_group" "edge_tgw_us_east_1" {
+  for_each = contains(local.edge_regions, "us_east_1") ? lookup(local.envs_by_region, "us_east_1", {}) : {}
+
+  provider    = aws.us_east_1
+  name        = "${each.key}-edge-tgw-sg"
+  description = "Allow ONLY external CIDRs to Edge TGW in us-east-1"
+  vpc_id      = each.value.edge_vpc_id
+
+  dynamic "ingress" {
+    for_each = var.edge_tgw_external_cidrs
+    content {
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = [ingress.value]
+    }
+  }
+  dynamic "egress" {
+    for_each = var.edge_tgw_external_cidrs
+    content {
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = [egress.value]
+    }
+  }
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-edge-tgw-sg"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+# eu-west-1
+resource "aws_security_group" "edge_tgw_eu_west_1" {
+  for_each = contains(local.edge_regions, "eu_west_1") ? lookup(local.envs_by_region, "eu_west_1", {}) : {}
+
+  provider    = aws.eu_west_1
+  name        = "${each.key}-edge-tgw-sg"
+  description = "Allow ONLY external CIDRs to Edge TGW in eu-west-1"
+  vpc_id      = each.value.edge_vpc_id
+
+  dynamic "ingress" {
+    for_each = var.edge_tgw_external_cidrs
+    content {
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = [ingress.value]
+    }
+  }
+
+  dynamic "egress" {
+    for_each = var.edge_tgw_external_cidrs
+    content {
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = [egress.value]
+    }
+  }
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-edge-tgw-sg"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+# eu-west-2
+resource "aws_security_group" "edge_tgw_eu_west_2" {
+  for_each = contains(local.edge_regions, "eu_west_2") ? lookup(local.envs_by_region, "eu_west_2", {}) : {}
+
+  provider    = aws.eu_west_2
+  name        = "${each.key}-edge-tgw-sg"
+  description = "Allow ONLY external CIDRs to Edge TGW in eu-west-2"
+  vpc_id      = each.value.edge_vpc_id
+
+  dynamic "ingress" {
+    for_each = var.edge_tgw_external_cidrs
+    content {
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = [ingress.value]
+    }
+  }
+
+  dynamic "egress" {
+    for_each = var.edge_tgw_external_cidrs
+    content {
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = [egress.value]
+    }
+  }
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-edge-tgw-sg"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+# ap-east-1
+resource "aws_security_group" "edge_tgw_ap_east_1" {
+  for_each = contains(local.edge_regions, "ap_east_1") ? lookup(local.envs_by_region, "ap_east_1", {}) : {}
+
+  provider    = aws.ap_east_1
+  name        = "${each.key}-edge-tgw-sg"
+  description = "Allow ONLY external CIDRs to Edge TGW in ap-east-1"
+  vpc_id      = each.value.edge_vpc_id
+
+  dynamic "ingress" {
+    for_each = var.edge_tgw_external_cidrs
+    content {
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = [ingress.value]
+    }
+  }
+
+  dynamic "egress" {
+    for_each = var.edge_tgw_external_cidrs
+    content {
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = [egress.value]
+    }
+  }
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-edge-tgw-sg"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+# ap-northeast-1
+resource "aws_security_group" "edge_tgw_ap_northeast_1" {
+  for_each = contains(local.edge_regions, "ap_northeast_1") ? lookup(local.envs_by_region, "ap_northeast_1", {}) : {}
+
+  provider    = aws.ap_northeast_1
+  name        = "${each.key}-edge-tgw-sg"
+  description = "Allow ONLY external CIDRs to Edge TGW in ap-northeast-1"
+  vpc_id      = each.value.edge_vpc_id
+
+  dynamic "ingress" {
+    for_each = var.edge_tgw_external_cidrs
+    content {
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = [ingress.value]
+    }
+  }
+
+  dynamic "egress" {
+    for_each = var.edge_tgw_external_cidrs
+    content {
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = [egress.value]
+    }
+  }
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-edge-tgw-sg"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+# ap-southeast-1
+resource "aws_security_group" "edge_tgw_ap_southeast_1" {
+  for_each = contains(local.edge_regions, "ap_southeast_1") ? lookup(local.envs_by_region, "ap_southeast_1", {}) : {}
+
+  provider    = aws.ap_southeast_1
+  name        = "${each.key}-edge-tgw-sg"
+  description = "Allow ONLY external CIDRs to Edge TGW in ap-southeast-1"
+  vpc_id      = each.value.edge_vpc_id
+
+  dynamic "ingress" {
+    for_each = var.edge_tgw_external_cidrs
+    content {
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = [ingress.value]
+    }
+  }
+
+  dynamic "egress" {
+    for_each = var.edge_tgw_external_cidrs
+    content {
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = [egress.value]
+    }
+  }
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-edge-tgw-sg"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
+
+# eu-central-1
+resource "aws_security_group" "edge_tgw_eu_central_1" {
+  for_each = contains(local.edge_regions, "eu_central_1") ? lookup(local.envs_by_region, "eu_central_1", {}) : {}
+
+  provider    = aws.eu_central_1
+  name        = "${each.key}-edge-tgw-sg"
+  description = "Allow ONLY external CIDRs to Edge TGW in eu-central-1"
+  vpc_id      = each.value.edge_vpc_id
+
+  dynamic "ingress" {
+    for_each = var.edge_tgw_external_cidrs
+    content {
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = [ingress.value]
+    }
+  }
+
+  dynamic "egress" {
+    for_each = var.edge_tgw_external_cidrs
+    content {
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = [egress.value]
+    }
+  }
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-edge-tgw-sg"
+    Module    = "terraform-aws-network-hub"
+    ManagedBy = "terraform"
+  })
+}
