@@ -1,0 +1,42 @@
+#── Core VPCs (private-only) ────────────────────────────────────────
+resource "aws_vpc" "core" {
+  for_each = var.vpc_configs
+
+  cidr_block           = each.value.core.primary
+  enable_dns_hostnames = true
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-core-vpc"
+    Module    = "terraform-aws-core"
+    ManagedBy = "terraform"
+  })
+}
+
+resource "aws_vpc_ipv4_cidr_block_association" "core_secondary" {
+  for_each = var.vpc_configs
+
+  vpc_id     = aws_vpc.core[each.key].id
+  cidr_block = each.value.core.secondary
+}
+
+
+#── Edge VPCs (public-facing) ─────────────────────────────────────
+resource "aws_vpc" "edge" {
+  for_each = var.vpc_configs
+
+  cidr_block           = each.value.edge.primary
+  enable_dns_hostnames = true
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-edge-vpc"
+    Module    = "terraform-aws-core"
+    ManagedBy = "terraform"
+  })
+}
+
+resource "aws_vpc_ipv4_cidr_block_association" "edge_secondary" {
+  for_each = var.vpc_configs
+
+  vpc_id     = aws_vpc.edge[each.key].id
+  cidr_block = each.value.edge.secondary
+}

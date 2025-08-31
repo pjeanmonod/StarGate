@@ -1,0 +1,157 @@
+// ─── VPCs & CIDRs ────────────────────────────────────────────────
+
+output "vpc_ids" {
+  description = "Map of VPC key → object with Core & Edge VPC IDs"
+  value = {
+    for name in keys(var.vpc_configs) : name => {
+      core = aws_vpc.core[name].id
+      edge = aws_vpc.edge[name].id
+    }
+  }
+}
+
+output "vpc_primary_cidrs" {
+  description = "Map of VPC key → object with Core & Edge primary CIDRs"
+  value = {
+    for name, cfg in var.vpc_configs : name => {
+      core = aws_vpc.core[name].cidr_block
+      edge = aws_vpc.edge[name].cidr_block
+    }
+  }
+}
+
+output "vpc_secondary_cidrs" {
+  description = "Map of VPC key → object with Core & Edge secondary CIDRs"
+  value = {
+    for name in keys(var.vpc_configs) : name => {
+      core = aws_vpc_ipv4_cidr_block_association.core_secondary[name].cidr_block
+      edge = aws_vpc_ipv4_cidr_block_association.edge_secondary[name].cidr_block
+    }
+  }
+}
+
+
+// ─── AZ-Backed Subnets ─────────────────────────────────────────────
+
+// Core public subnets by VPC
+output "core_public_subnet_ids_by_vpc" {
+  description = "Map of VPC key → sorted list of Core AZ-public subnet IDs"
+  value = {
+    for name in keys(var.vpc_configs) : name => [
+      for k in sort([
+        for k, d in local.core_public_map : k
+        if startswith(k, "${name}-core-az")
+      ]) : aws_subnet.core_public[k].id
+    ]
+  }
+}
+
+// Core private subnets by VPC
+output "core_private_subnet_ids_by_vpc" {
+  description = "Map of VPC key → sorted list of Core AZ-private subnet IDs"
+  value = {
+    for name in keys(var.vpc_configs) : name => [
+      for k in sort([
+        for k, d in local.core_private_map : k
+        if startswith(k, "${name}-core-az")
+      ]) : aws_subnet.core_private[k].id
+    ]
+  }
+}
+
+// Edge public subnets by VPC
+output "edge_public_subnet_ids_by_vpc" {
+  description = "Map of VPC key → sorted list of Edge AZ-public subnet IDs"
+  value = {
+    for name in keys(var.vpc_configs) : name => [
+      for k in sort([
+        for k, d in local.edge_public_map : k
+        if startswith(k, "${name}-edge-az")
+      ]) : aws_subnet.edge_public[k].id
+    ]
+  }
+}
+
+// Edge private subnets by VPC
+output "edge_private_subnet_ids_by_vpc" {
+  description = "Map of VPC key → sorted list of Edge AZ-private subnet IDs"
+  value = {
+    for name in keys(var.vpc_configs) : name => [
+      for k in sort([
+        for k, d in local.edge_private_map : k
+        if startswith(k, "${name}-edge-az")
+      ]) : aws_subnet.edge_private[k].id
+    ]
+  }
+}
+
+
+// ─── Local-Zone Subnets ────────────────────────────────────────────
+
+output "local_zone_public_subnet_ids" {
+  description = "Map of Local-Zone subnet key → ID (both Core & Edge)"
+  value = merge(
+    { for k, s in aws_subnet.core_lz_public : k => s.id },
+    { for k, s in aws_subnet.edge_lz_public : k => s.id }
+  )
+}
+
+output "local_zone_private_subnet_ids" {
+  description = "Map of Local-Zone subnet key → ID (both Core & Edge)"
+  value = merge(
+    { for k, s in aws_subnet.core_lz_private : k => s.id },
+    { for k, s in aws_subnet.edge_lz_private : k => s.id }
+  )
+}
+
+
+// ─── Internet Gateways ────────────────────────────────────────────
+
+output "igw_ids" {
+  description = "Map of VPC key → object with Core & Edge IGW IDs (empty string if none)"
+  value = {
+    for name in keys(var.vpc_configs) : name => {
+      core = try(aws_internet_gateway.core_igw[name].id, "")
+      edge = try(aws_internet_gateway.edge_igw[name].id, "")
+    }
+  }
+}
+
+
+// ─── Route Tables ─────────────────────────────────────────────────
+
+output "core_route_table_ids" {
+  description = <<EOF
+Map of VPC key → object with Core route tables:
+• public  = public RT (only if you attached an IGW)
+• private = always-present private RT
+EOF
+  value = {
+    for name in keys(var.vpc_configs) : name => {
+      public  = try(aws_route_table.core_public_rt[name].id, "")
+      private = try(aws_route_table.core_private_rt[name].id, "")
+    }
+  }
+}
+
+output "edge_route_table_ids" {
+  description = <<EOF
+Map of VPC key → object with Edge route tables:
+• public  = public RT (only if you attached an IGW)
+• private = private RT (only if you created private subnets)
+EOF
+  value = {
+    for name in keys(var.vpc_configs) : name => {
+      public  = try(aws_route_table.edge_public_rt[name].id, "")
+      private = try(aws_route_table.edge_private_rt[name].id, "")
+    }
+  }
+}
+
+
+// ─── Availability Zones ────────────────────────────────────────────
+
+output "availability_zones" {
+  description = "List of AZ names used (capped to var.azs_per_vpc)"
+  value       = local.selected_azs
+}

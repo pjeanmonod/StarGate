@@ -1,88 +1,195 @@
 locals {
-  # Sort your env keys once
-  sorted_region_setups = sort(keys(var.region_setups))
+  azs          = data.aws_availability_zones.available.names
+  selected_azs = slice(local.azs, 0, var.azs_per_vpc)
 
-  # Build every unique Core–Core peering pair (A < B to avoid dupes)
-  peering_pairs = {
-    for pair in setproduct(keys(var.region_setups), keys(var.region_setups)) :
-    "${pair[0]}-${pair[1]}" => {
-      requester = var.region_setups[pair[0]]
-      accepter  = var.region_setups[pair[1]]
-    }
-    if pair[0] != pair[1] && pair[0] == sort([pair[0], pair[1]])[0]
-  }
-
-  # “Requester” peering grouped by region_alias (for initiator resources)
-  peer_req_by_region = {
-    for alias in distinct([
-      for p in values(local.peering_pairs) : p.requester.region_alias
-    ]) :
-    alias => {
-      for k, p in local.peering_pairs : k => p
-      if p.requester.region_alias == alias
-    }
-  }
-
-  # “Accepter” peering grouped by region_alias (for accepter resources)
-  peer_acc_by_region = {
-    for alias in distinct([
-      for p in values(local.peering_pairs) : p.accepter.region_alias
-    ]) :
-    alias => {
-      for k, p in local.peering_pairs : k => p
-      if p.accepter.region_alias == alias && p.requester.region_alias != alias
-    }
-  }
-
-  # Flatten every "init_*" resource into one map: pair_key → connection_id
-  all_peer_initiator_ids = merge(
-    { for k, v in aws_vpc_peering_connection.init_us_east_1 : k => v.id },
-    { for k, v in aws_vpc_peering_connection.init_eu_west_1 : k => v.id },
-    { for k, v in aws_vpc_peering_connection.init_eu_west_2 : k => v.id },
-    { for k, v in aws_vpc_peering_connection.init_ap_east_1 : k => v.id },
-    { for k, v in aws_vpc_peering_connection.init_ap_northeast_1 : k => v.id },
-    { for k, v in aws_vpc_peering_connection.init_ap_southeast_1 : k => v.id },
-    { for k, v in aws_vpc_peering_connection.init_eu_central_1 : k => v.id }
-  )
-
-  # Map your provider‐alias names to real AWS region strings
-  region_map = {
-    us_east_1      = "us-east-1"
-    eu_west_1      = "eu-west-1"
-    eu_west_2      = "eu-west-2"
-    ap_east_1      = "ap-east-1"
-    ap_northeast_1 = "ap-northeast-1"
-    ap_southeast_1 = "ap-southeast-1"
-    eu_central_1   = "eu-central-1"
-  }
-
-  # Group all environments by region_alias (for TGW & DX blocks)
-  envs_by_region = {
-    for alias in distinct([
-      for e in values(var.region_setups) : e.region_alias
-    ]) :
-    alias => {
-      for k, e in var.region_setups : k => e
-      if e.region_alias == alias
-    }
-  }
-
-  core_envs_by_region = var.enable_core_tgw ? local.envs_by_region : {}
-  edge_envs_by_region = var.enable_edge_tgw ? local.envs_by_region : {}
-  dx_envs_by_region   = (var.enable_core_tgw && var.enable_direct_connect) ? local.envs_by_region : {}
-
-  peer_regions = distinct(
-    concat(
-      keys(local.peer_req_by_region),
-      keys(local.peer_acc_by_region),
-    )
-  )
-
-  # Flatten every Core VPC’s primary & secondary CIDR for SG rules
-  all_core_vpc_cidrs = distinct(flatten([
-    for env in values(var.region_setups) : [
-      env.primary_cidrs.core,
-      env.secondary_cidrs.core,
+  # ─────────────────────────────────────────────────────────
+  # AZ-Backed Core Public Subnets
+  # ─────────────────────────────────────────────────────────
+  core_public_defs = flatten([
+    for env, cfg in var.vpc_configs : [
+      for az_idx in range(length(local.selected_azs)) : [
+        for idx in range(cfg.core.subnets_per_az.public_subnets) : {
+          key           = format("%s-core-az%d-pub-%d", env, az_idx + 1, idx + 1)
+          vpc_id        = aws_vpc.core[env].id
+          cidr_block    = cidrsubnet(cfg.core.primary, 8, az_idx * cfg.core.subnets_per_az.public_subnets + idx)
+          az            = local.selected_azs[az_idx]
+          map_public_ip = true
+        }
+      ]
     ]
-  ]))
+  ])
+
+  # ─────────────────────────────────────────────────────────
+  # AZ-Backed Core Private Subnets
+  # ─────────────────────────────────────────────────────────
+  core_private_defs = flatten([
+    for env, cfg in var.vpc_configs : [
+      for az_idx in range(length(local.selected_azs)) : [
+        for idx in range(cfg.core.subnets_per_az.private_subnets) : {
+          key           = format("%s-core-az%d-priv-%d", env, az_idx + 1, idx + 1)
+          vpc_id        = aws_vpc.core[env].id
+          cidr_block    = cidrsubnet(cfg.core.secondary, 8, az_idx * cfg.core.subnets_per_az.private_subnets + idx)
+          az            = local.selected_azs[az_idx]
+          map_public_ip = false
+        }
+      ]
+    ]
+  ])
+
+  # ─────────────────────────────────────────────────────────
+  # AZ-Backed Edge Public Subnets
+  # ─────────────────────────────────────────────────────────
+  edge_public_defs = flatten([
+    for env, cfg in var.vpc_configs : [
+      for az_idx in range(length(local.selected_azs)) : [
+        for idx in range(cfg.edge.subnets_per_az.public_subnets) : {
+          key           = format("%s-edge-az%d-pub-%d", env, az_idx + 1, idx + 1)
+          vpc_id        = aws_vpc.edge[env].id
+          cidr_block    = cidrsubnet(cfg.edge.primary, 8, az_idx * cfg.edge.subnets_per_az.public_subnets + idx)
+          az            = local.selected_azs[az_idx]
+          map_public_ip = true
+        }
+      ]
+    ]
+  ])
+
+  # ─────────────────────────────────────────────────────────
+  # AZ-Backed Edge Private Subnets
+  # ─────────────────────────────────────────────────────────
+  edge_private_defs = flatten([
+    for env, cfg in var.vpc_configs : [
+      for az_idx in range(length(local.selected_azs)) : [
+        for idx in range(cfg.edge.subnets_per_az.private_subnets) : {
+          key           = format("%s-edge-az%d-priv-%d", env, az_idx + 1, idx + 1)
+          vpc_id        = aws_vpc.edge[env].id
+          cidr_block    = cidrsubnet(cfg.edge.secondary, 8, az_idx * cfg.edge.subnets_per_az.private_subnets + idx)
+          az            = local.selected_azs[az_idx]
+          map_public_ip = false
+        }
+      ]
+    ]
+  ])
+
+  # ─────────────────────────────────────────────────────────
+  # LZ-Backed Core Public Subnets
+  # ─────────────────────────────────────────────────────────
+  core_lz_public_defs = flatten([
+    for env, cfg in var.vpc_configs : [
+      for lz_idx, lz in var.local_zones : [
+        for idx in range(var.subnets_per_local_zone.public_subnets) : {
+          key    = format("%s-core-lz-%s-pub-%d", env, lz, idx + 1)
+          vpc_id = aws_vpc.core[env].id
+          cidr_block = cidrsubnet(
+            cfg.core.primary,
+            16,
+            100 + lz_idx * var.subnets_per_local_zone.public_subnets + idx
+          )
+          az            = lz
+          map_public_ip = true
+        }
+      ]
+    ]
+  ])
+
+  # ─────────────────────────────────────────────────────────
+  # LZ-Backed Core Private Subnets
+  # ─────────────────────────────────────────────────────────
+  core_lz_private_defs = flatten([
+    for env, cfg in var.vpc_configs : [
+      for lz_idx, lz in var.local_zones : [
+        for idx in range(var.subnets_per_local_zone.private_subnets) : {
+          key    = format("%s-core-lz-%s-priv-%d", env, lz, idx + 1)
+          vpc_id = aws_vpc.core[env].id
+          cidr_block = cidrsubnet(
+            cfg.core.secondary,
+            16,
+            300 + lz_idx * var.subnets_per_local_zone.private_subnets + idx
+          )
+          az            = lz
+          map_public_ip = false
+        }
+      ]
+    ]
+  ])
+
+  # ─────────────────────────────────────────────────────────
+  # LZ-Backed Edge Public Subnets
+  # ─────────────────────────────────────────────────────────
+  edge_lz_public_defs = flatten([
+    for env, cfg in var.vpc_configs : [
+      for lz_idx, lz in var.local_zones : [
+        for idx in range(var.subnets_per_local_zone.public_subnets) : {
+          key    = format("%s-edge-lz-%s-pub-%d", env, lz, idx + 1)
+          vpc_id = aws_vpc.edge[env].id
+          cidr_block = cidrsubnet(
+            cfg.edge.primary,
+            16,
+            200 + lz_idx * var.subnets_per_local_zone.public_subnets + idx
+          )
+          az            = lz
+          map_public_ip = true
+        }
+      ]
+    ]
+  ])
+
+  # ─────────────────────────────────────────────────────────
+  # LZ-Backed Edge Private Subnets
+  # ─────────────────────────────────────────────────────────
+  edge_lz_private_defs = flatten([
+    for env, cfg in var.vpc_configs : [
+      for lz_idx, lz in var.local_zones : [
+        for idx in range(var.subnets_per_local_zone.private_subnets) : {
+          key    = format("%s-edge-lz-%s-priv-%d", env, lz, idx + 1)
+          vpc_id = aws_vpc.edge[env].id
+          cidr_block = cidrsubnet(
+            cfg.edge.secondary,
+            16,
+            400 + lz_idx * var.subnets_per_local_zone.private_subnets + idx
+          )
+          az            = lz
+          map_public_ip = false
+        }
+      ]
+    ]
+  ])
+
+  # ─────────────────────────────────────────────────────────
+  # Turn each list into a map for for_each
+  # ─────────────────────────────────────────────────────────
+  core_public_map     = { for d in local.core_public_defs : d.key => d }
+  core_private_map    = { for d in local.core_private_defs : d.key => d }
+  edge_public_map     = { for d in local.edge_public_defs : d.key => d }
+  edge_private_map    = { for d in local.edge_private_defs : d.key => d }
+  core_lz_public_map  = { for d in local.core_lz_public_defs : d.key => d }
+  core_lz_private_map = { for d in local.core_lz_private_defs : d.key => d }
+  edge_lz_public_map  = { for d in local.edge_lz_public_defs : d.key => d }
+  edge_lz_private_map = { for d in local.edge_lz_private_defs : d.key => d }
+
+  # ─────────────────────────────────────────────────────────
+  # Turn each list into a map for for_each
+  # ─────────────────────────────────────────────────────────
+  edge_pub_vpcs = {
+    for vpc, cfg in var.vpc_configs :
+    vpc => cfg.edge
+    if cfg.edge.subnets_per_az.public_subnets > 0 && cfg.edge.attach_igw
+  }
+
+  edge_priv_vpcs = {
+    for vpc, cfg in var.vpc_configs :
+    vpc => cfg.edge
+    if cfg.edge.subnets_per_az.private_subnets > 0
+  }
+
+  core_pub_vpcs = {
+    for vpc, cfg in var.vpc_configs :
+    vpc => cfg.core
+    if cfg.core.subnets_per_az.public_subnets > 0 && cfg.core.attach_igw
+  }
+
+  core_priv_vpcs = {
+    for vpc, cfg in var.vpc_configs :
+    vpc => cfg.core
+    if cfg.core.subnets_per_az.private_subnets > 0
+  }
 }

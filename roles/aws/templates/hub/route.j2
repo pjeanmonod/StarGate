@@ -1,0 +1,149 @@
+# ─── Edge Public RTs ───────────────────────────────────────────────
+resource "aws_route_table" "edge_public_rt" {
+  for_each = local.edge_pub_vpcs
+
+  vpc_id = aws_vpc.edge[each.key].id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.edge_igw[each.key].id
+  }
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-edge-public-rt"
+    Module    = "terraform-aws-core"
+    ManagedBy = "terraform"
+  })
+}
+
+# ─── Edge Private RTs ──────────────────────────────────────────────
+resource "aws_route_table" "edge_private_rt" {
+  for_each = local.edge_priv_vpcs
+
+  vpc_id = aws_vpc.edge[each.key].id
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-edge-private-rt"
+    Module    = "terraform-aws-core"
+    ManagedBy = "terraform"
+  })
+}
+
+# ─── Core Public RTs ───────────────────────────────────────────────
+resource "aws_route_table" "core_public_rt" {
+  for_each = local.core_pub_vpcs
+
+  vpc_id = aws_vpc.core[each.key].id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.core_igw[each.key].id
+  }
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-core-public-rt"
+    Module    = "terraform-aws-core"
+    ManagedBy = "terraform"
+  })
+}
+
+# ─── Core Private RTs ──────────────────────────────────────────────
+resource "aws_route_table" "core_private_rt" {
+  for_each = local.core_priv_vpcs
+
+  vpc_id = aws_vpc.core[each.key].id
+
+  tags = merge(var.tags, {
+    Name      = "${each.key}-core-private-rt"
+    Module    = "terraform-aws-core"
+    ManagedBy = "terraform"
+  })
+}
+
+
+# ───────────────────────────────────────────────────────────────────────────────
+# AZ-BACKED SUBNET → RT ASSOCIATIONS
+# ───────────────────────────────────────────────────────────────────────────────
+
+# Edge AZ-Public
+resource "aws_route_table_association" "edge_public_assoc" {
+  for_each = {
+    for k, sn in aws_subnet.edge_public : k => sn
+    if contains(keys(local.edge_pub_vpcs), split("-", k)[0])
+  }
+
+  subnet_id      = each.value.id
+  route_table_id = aws_route_table.edge_public_rt[split("-", each.key)[0]].id
+}
+
+# Edge AZ-Private
+resource "aws_route_table_association" "edge_private_assoc" {
+  for_each = aws_subnet.edge_private
+
+  subnet_id      = each.value.id
+  route_table_id = aws_route_table.edge_private_rt[split("-", each.key)[0]].id
+}
+
+# Core AZ-Public
+resource "aws_route_table_association" "core_public_assoc" {
+  for_each = {
+    for k, sn in aws_subnet.core_public : k => sn
+    if contains(keys(local.core_pub_vpcs), split("-", k)[0])
+  }
+
+  subnet_id      = each.value.id
+  route_table_id = aws_route_table.core_public_rt[split("-", each.key)[0]].id
+}
+
+# Core AZ-Private
+resource "aws_route_table_association" "core_private_assoc" {
+  for_each = aws_subnet.core_private
+
+  subnet_id      = each.value.id
+  route_table_id = aws_route_table.core_private_rt[split("-", each.key)[0]].id
+}
+
+
+# ───────────────────────────────────────────────────────────────────────────────
+# LZ-BACKED SUBNET → RT ASSOCIATIONS (only if you’ve defined any local_zones)
+# ───────────────────────────────────────────────────────────────────────────────
+
+resource "aws_route_table_association" "edge_lz_public_assoc" {
+  for_each = {
+    for k, sn in aws_subnet.edge_lz_public : k => sn
+    if length(var.local_zones) > 0 && contains(keys(local.edge_pub_vpcs), split("-", k)[0])
+  }
+
+  subnet_id      = each.value.id
+  route_table_id = aws_route_table.edge_public_rt[split("-", each.key)[0]].id
+}
+
+resource "aws_route_table_association" "edge_lz_private_assoc" {
+  for_each = {
+    for k, sn in aws_subnet.edge_lz_private : k => sn
+    if length(var.local_zones) > 0
+  }
+
+  subnet_id      = each.value.id
+  route_table_id = aws_route_table.edge_private_rt[split("-", each.key)[0]].id
+}
+
+resource "aws_route_table_association" "core_lz_public_assoc" {
+  for_each = {
+    for k, sn in aws_subnet.core_lz_public : k => sn
+    if length(var.local_zones) > 0 && contains(keys(local.core_pub_vpcs), split("-", k)[0])
+  }
+
+  subnet_id      = each.value.id
+  route_table_id = aws_route_table.core_public_rt[split("-", each.key)[0]].id
+}
+
+resource "aws_route_table_association" "core_lz_private_assoc" {
+  for_each = {
+    for k, sn in aws_subnet.core_lz_private : k => sn
+    if length(var.local_zones) > 0
+  }
+
+  subnet_id      = each.value.id
+  route_table_id = aws_route_table.core_private_rt[split("-", each.key)[0]].id
+}

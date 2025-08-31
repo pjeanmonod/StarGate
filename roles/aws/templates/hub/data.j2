@@ -1,0 +1,19 @@
+# Retrieve a list of currently available AWS availability zones (AZs) within the configured region.
+# These AZs are used for distributing subnets evenly across multiple zones for high availability.
+data "aws_availability_zones" "available" {
+  state = "available"
+
+  filter {
+    name   = "opt-in-status"
+    values = ["opt-in-not-required"]
+  }
+}
+
+data "aws_availability_zones" "local_zones" {
+  all_availability_zones = true
+
+  filter {
+    name   = "opt-in-status"
+    values = ["not-opted-in", "opted-in"]
+  }
+}

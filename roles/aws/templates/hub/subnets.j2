@@ -1,0 +1,183 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# Core-Public
+# ──────────────────────────────────────────────────────────────────────────────
+resource "aws_subnet" "core_public" {
+  for_each = local.core_public_map
+
+  vpc_id                  = each.value.vpc_id
+  cidr_block              = each.value.cidr_block
+  availability_zone       = each.value.az
+  map_public_ip_on_launch = each.value.map_public_ip
+
+  tags = merge(
+    var.tags,
+    {
+      Name      = each.key
+      Module    = "terraform-aws-core"
+      ManagedBy = "terraform"
+    }
+  )
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Core-Private
+# ──────────────────────────────────────────────────────────────────────────────
+resource "aws_subnet" "core_private" {
+  for_each = local.core_private_map
+
+  vpc_id                  = each.value.vpc_id
+  cidr_block              = each.value.cidr_block
+  availability_zone       = each.value.az
+  map_public_ip_on_launch = each.value.map_public_ip
+
+  depends_on = [
+    aws_vpc_ipv4_cidr_block_association.core_secondary
+  ]
+
+  tags = merge(
+    var.tags,
+    {
+      Name      = each.key
+      Module    = "terraform-aws-core"
+      ManagedBy = "terraform"
+    }
+  )
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Edge-Public
+# ──────────────────────────────────────────────────────────────────────────────
+resource "aws_subnet" "edge_public" {
+  for_each = local.edge_public_map
+
+  vpc_id                  = each.value.vpc_id
+  cidr_block              = each.value.cidr_block
+  availability_zone       = each.value.az
+  map_public_ip_on_launch = each.value.map_public_ip
+
+  tags = merge(
+    var.tags,
+    {
+      Name      = each.key
+      Module    = "terraform-aws-core"
+      ManagedBy = "terraform"
+    }
+  )
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Edge-Private
+# ──────────────────────────────────────────────────────────────────────────────
+resource "aws_subnet" "edge_private" {
+  for_each = local.edge_private_map
+
+  vpc_id                  = each.value.vpc_id
+  cidr_block              = each.value.cidr_block
+  availability_zone       = each.value.az
+  map_public_ip_on_launch = each.value.map_public_ip
+
+  depends_on = [
+    aws_vpc_ipv4_cidr_block_association.edge_secondary
+  ]
+
+  tags = merge(
+    var.tags,
+    {
+      Name      = each.key
+      Module    = "terraform-aws-core"
+      ManagedBy = "terraform"
+    }
+  )
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Core-Local-Zone Public
+# ──────────────────────────────────────────────────────────────────────────────
+resource "aws_subnet" "core_lz_public" {
+  for_each = local.core_lz_public_map
+
+  vpc_id                  = each.value.vpc_id
+  cidr_block              = each.value.cidr_block
+  availability_zone       = each.value.az
+  map_public_ip_on_launch = each.value.map_public_ip
+
+  tags = merge(
+    var.tags,
+    {
+      Name      = each.key
+      Module    = "terraform-aws-core"
+      ManagedBy = "terraform"
+    }
+  )
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Core-Local-Zone Private
+# ──────────────────────────────────────────────────────────────────────────────
+resource "aws_subnet" "core_lz_private" {
+  for_each = local.core_lz_private_map
+
+  vpc_id                  = each.value.vpc_id
+  cidr_block              = each.value.cidr_block
+  availability_zone       = each.value.az
+  map_public_ip_on_launch = each.value.map_public_ip
+
+  depends_on = [
+    aws_vpc_ipv4_cidr_block_association.core_secondary
+  ]
+
+  tags = merge(
+    var.tags,
+    {
+      Name      = each.key
+      Module    = "terraform-aws-core"
+      ManagedBy = "terraform"
+    }
+  )
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Edge-Local-Zone Public
+# ──────────────────────────────────────────────────────────────────────────────
+resource "aws_subnet" "edge_lz_public" {
+  for_each = local.edge_lz_public_map
+
+  vpc_id                  = each.value.vpc_id
+  cidr_block              = each.value.cidr_block
+  availability_zone       = each.value.az
+  map_public_ip_on_launch = each.value.map_public_ip
+
+  tags = merge(
+    var.tags,
+    {
+      Name      = each.key
+      Module    = "terraform-aws-core"
+      ManagedBy = "terraform"
+    }
+  )
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Edge-Local-Zone Private
+# ──────────────────────────────────────────────────────────────────────────────
+resource "aws_subnet" "edge_lz_private" {
+  for_each = local.edge_lz_private_map
+
+  vpc_id                  = each.value.vpc_id
+  cidr_block              = each.value.cidr_block
+  availability_zone       = each.value.az
+  map_public_ip_on_launch = each.value.map_public_ip
+
+  depends_on = [
+    aws_vpc_ipv4_cidr_block_association.edge_secondary
+  ]
+
+  tags = merge(
+    var.tags,
+    {
+      Name      = each.key
+      Module    = "terraform-aws-core"
+      ManagedBy = "terraform"
+    }
+  )
+}

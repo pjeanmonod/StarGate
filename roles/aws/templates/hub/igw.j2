@@ -1,0 +1,36 @@
+# Internet Gateways
+resource "aws_internet_gateway" "core_igw" {
+  for_each = {
+    for name, cfg in var.vpc_configs : name => cfg
+    if cfg.core.attach_igw
+  }
+
+  vpc_id = aws_vpc.core[each.key].id
+
+  tags = merge(
+    var.tags,
+    {
+      Name      = format("%s-core-igw", each.key)
+      Module    = "terraform-aws-core"
+      ManagedBy = "terraform"
+    }
+  )
+}
+
+resource "aws_internet_gateway" "edge_igw" {
+  for_each = {
+    for name, cfg in var.vpc_configs : name => cfg
+    if cfg.edge.attach_igw
+  }
+
+  vpc_id = aws_vpc.edge[each.key].id
+
+  tags = merge(
+    var.tags,
+    {
+      Name      = format("%s-edge-igw", each.key)
+      Module    = "terraform-aws-core"
+      ManagedBy = "terraform"
+    }
+  )
+}

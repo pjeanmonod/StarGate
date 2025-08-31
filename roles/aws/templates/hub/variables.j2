@@ -1,0 +1,93 @@
+variable "vpc_configs" {
+  description = "Map of VPC Config profiles for Edge and Core VPCs"
+  type = map(object({
+    core = object({
+      primary   = string
+      secondary = string
+      subnets_per_az = object({
+        public_subnets  = number
+        private_subnets = number
+      })
+      attach_igw = bool
+    })
+    edge = object({
+      primary   = string
+      secondary = string
+      subnets_per_az = object({
+        public_subnets  = number
+        private_subnets = number
+      })
+      attach_igw = bool
+    })
+  }))
+
+  validation {
+    condition = alltrue([
+      for cfg in values(var.vpc_configs) :
+      (!cfg.core.attach_igw || cfg.core.subnets_per_az.public_subnets > 0) &&
+      (!cfg.edge.attach_igw || cfg.edge.subnets_per_az.public_subnets > 0)
+    ])
+    error_message = <<EOF
+Every attach_igw = true in core or edge requires at least one public_subnets > 0 in that role:
+  • core.attach_igw ⇒ core.subnets_per_az.public_subnets > 0
+  • edge.attach_igw ⇒ edge.subnets_per_az.public_subnets > 0
+EOF
+  }
+}
+
+
+variable "azs_per_vpc" {
+  description = "Number of availability zones or local zones per VPC"
+  type        = number
+  default     = 2
+
+  validation {
+    condition     = var.azs_per_vpc > 0 && var.azs_per_vpc <= length(data.aws_availability_zones.available.names)
+    error_message = "azs_per_vpc must be between 1 and the number of available AZs"
+  }
+
+}
+
+
+variable "subnets_per_local_zone" {
+  description = "Number of public and private subnets per Local Zone"
+  type = object({
+    public_subnets  = number
+    private_subnets = number
+  })
+  default = {
+    public_subnets  = 1
+    private_subnets = 1
+  }
+}
+
+# Example referencing the fetched local zones
+variable "local_zones" {
+  type        = list(string)
+  description = "Explicitly selected AWS Local Zones to deploy subnets into"
+  default     = []
+  validation {
+    condition     = length(setsubtract(var.local_zones, data.aws_availability_zones.local_zones.names)) == 0
+    error_message = "One or more specified local_zones are invalid or unavailable."
+  }
+}
+
+variable "tags" {
+  description = <<EOF
+Additional tags to apply to all resources in this module.
+Caller-provided values must NOT include the reserved keys:
+  • Module
+  • ManagedBy
+EOF
+
+  type    = map(string)
+  default = {}
+
+  validation {
+    condition = length([
+      for k in keys(var.tags) : k
+      if k == "Module" || k == "ManagedBy"
+    ]) == 0
+    error_message = "You may not set reserved tag keys Module or ManagedBy in var.tags."
+  }
+}
