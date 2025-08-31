@@ -3,25 +3,43 @@
   block:
     - name: create vpcs
       template:
-        src: /hub/vpcbuild.j2
+        src: /hub/vpc.j2
         dest: /data/work/hub/vpc.tf
-    - name: create transit gateways 
+    - name: create internet gateways 
       template:
-        src: /hub/tgw.j2
-        dest: /data/work/hub/tgw.tf 
+        src: /hub/igw.j2
+        dest: /data/work/hub/igw.tf 
     - name: create locals
       template:
         src: /hub/locals.j2
         dest: /data/work/hub/locals.tf
-    - name: create direct connect
+    - name: create outputs
       template:
-        src: /hub/direct_connect.j2
-        dest: /data/work/hub/direct_connect.tf
-    - name: create peering_sg
+        src: /hub/outputs.j2
+        dest: /data/work/hub/outputs.tf
+    - name: create route
       template:
-        src: /hub/peering_sg.j2
-        dest: /data/work/hub/peering_sg.tf
-    - name: create tgw_sg
+        src: /hub/route.j2
+        dest: /data/work/hub/route.tf
+    - name: create subnets
       template:
-        src: /hub/tgw_sg.j2
-        dest: /data/work/hub/tgw_sg.tf
+        src: /hub/subnets.j2
+        dest: /data/work/hub/subnets.tf
+    - name: create data
+      template:
+        src: /hub/data.j2
+        dest: /data/work/hub/data.tf
+    - name: create variables
+      template:
+        src: /hub/variables.j2
+        dest: /data/work/hub/variables.tf
+    - name: create versions
+      template:
+        src: /hub/versions.j2
+        dest: /data/work/hub/versions.tf
+    - name: create main
+      template:
+        src: /hub/main.j2
+        dest: /data/work/hub/main.tf
+    
+
