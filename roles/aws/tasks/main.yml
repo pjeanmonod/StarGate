@@ -23,7 +23,7 @@
 - name: aws hub build module task
   include_tasks: hub.yml
   with_items: "{{ job_vars }}"
-  when: "'aws_hub' in item.tags"
+  when: "'stargate_all' in item.tags"
 
 - include: provider.yml
   with_items: "{{ job_vars }}"
