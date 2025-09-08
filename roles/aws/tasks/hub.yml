@@ -1,5 +1,5 @@
 ---
-- name: aws_vpc
+- name: aws_hub
   block:
     - name: create vpcs
       template:
