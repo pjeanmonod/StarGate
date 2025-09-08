@@ -12,7 +12,7 @@
     - name: create locals
       template:
         src: hub/locals.j2
-        dest: data/work/locals.tf
+        dest: /data/work/locals.tf
     - name: create outputs
       template:
         src: hub/outputs.j2
