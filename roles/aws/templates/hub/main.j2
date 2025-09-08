@@ -7,10 +7,6 @@ provider "aws" {
 module "vpc_config_eu_west_1" {
   source = "../../"
 
-  providers = {
-    aws = aws.{{ region }}
-  }
-
   vpc_configs = {
     "ireland" = {
       core = {

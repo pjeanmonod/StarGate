@@ -25,7 +25,7 @@
   with_items: "{{ job_vars }}"
   when: "'stargate_all' in item.tags"
 
-##- include: provider.yml
-##  with_items: "{{ job_vars }}"
+- include: provider.yml
+  with_items: "{{ job_vars }}"
 
 
