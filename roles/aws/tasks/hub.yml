@@ -3,43 +3,43 @@
   block:
     - name: create vpcs
       template:
-        src: /hub/vpc.j2
+        src: hub/vpc.j2
         dest: /data/work/hub/vpc.tf
     - name: create internet gateways 
       template:
-        src: /hub/igw.j2
+        src: hub/igw.j2
         dest: /data/work/hub/igw.tf 
     - name: create locals
       template:
-        src: /hub/locals.j2
-        dest: /data/work/hub/locals.tf
+        src: hub/locals.j2
+        dest: data/work/hub/locals.tf
     - name: create outputs
       template:
-        src: /hub/outputs.j2
+        src: hub/outputs.j2
         dest: /data/work/hub/outputs.tf
     - name: create route
       template:
-        src: /hub/route.j2
+        src: hub/route.j2
         dest: /data/work/hub/route.tf
     - name: create subnets
       template:
-        src: /hub/subnets.j2
+        src: hub/subnets.j2
         dest: /data/work/hub/subnets.tf
     - name: create data
       template:
-        src: /hub/data.j2
+        src: hub/data.j2
         dest: /data/work/hub/data.tf
     - name: create variables
       template:
-        src: /hub/variables.j2
+        src: hub/variables.j2
         dest: /data/work/hub/variables.tf
     - name: create versions
       template:
-        src: /hub/versions.j2
+        src: hub/versions.j2
         dest: /data/work/hub/versions.tf
     - name: create main
       template:
-        src: /hub/main.j2
+        src: hub/main.j2
         dest: /data/work/hub/main.tf
     
 
