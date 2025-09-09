@@ -6,14 +6,14 @@ module "vpc_config_eu_west_1" {
   vpc_configs = {
     "ireland" = {
       core = {
-        primary        = {{ item.CorePriCIDR }}
-        secondary      = {{ item.CoreSecCIDR }}
+        primary        = "{{ item.CorePriCIDR }}"
+        secondary      = "{{ item.CoreSecCIDR }}"
         subnets_per_az = { public_subnets = {{ item.CorepublicSubnetsPerAZ }}, private_subnets = {{ item.CoreprivateSubnetsPerAZ }} }
         attach_igw     = {{ item.coreIgw }}
       }
       edge = {
-        primary        = {{ item.EdgePriCIDR }}
-        secondary      = {{ item.EdgeSecCIDR }}
+        primary        = "{{ item.EdgePriCIDR }}"
+        secondary      = "{{ item.EdgeSecCIDR }}"
         subnets_per_az = { public_subnets = {{ item.EdgepublicSubnetsPerAZ }}, private_subnets = {{ item.EdgeprivateSubnetsPerAZ }} }
         attach_igw     = {{ item.edgeIgw }}
       }
