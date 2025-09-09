@@ -8,18 +8,18 @@ module "vpc_config_eu_west_1" {
       core = {
         primary        = "{{ item.CorePriCIDR }}"
         secondary      = "{{ item.CoreSecCIDR }}"
-        subnets_per_az = { public_subnets = {{ item.CorepublicSubnetsPerAZ }}, private_subnets = {{ item.CoreprivateSubnetsPerAZ }} }
-        attach_igw     = {{ item.coreIgw }}
+        subnets_per_az = { public_subnets = "{{ item.CorepublicSubnetsPerAZ }}", private_subnets = "{{ item.CoreprivateSubnetsPerAZ }}" }
+        attach_igw     = "{{ item.coreIgw }}"
       }
       edge = {
         primary        = "{{ item.EdgePriCIDR }}"
         secondary      = "{{ item.EdgeSecCIDR }}"
-        subnets_per_az = { public_subnets = {{ item.EdgepublicSubnetsPerAZ }}, private_subnets = {{ item.EdgeprivateSubnetsPerAZ }} }
-        attach_igw     = {{ item.edgeIgw }}
+        subnets_per_az = { public_subnets = "{{ item.EdgepublicSubnetsPerAZ }}", private_subnets = "{{ item.EdgeprivateSubnetsPerAZ }}" }
+        attach_igw     = "{{ item.edgeIgw }}"
       }
     }
   }
-  azs_per_vpc = {{ item.azsperVPC }}
+  azs_per_vpc = "{{ item.azsperVPC }}"
 
   tags = {
     Environment = "dev"
