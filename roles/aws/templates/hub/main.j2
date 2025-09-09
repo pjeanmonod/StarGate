@@ -1,6 +1,7 @@
 
 provider "aws" {
-  region = {{ region }}
+  region = {{ item.region }}
+  
 }
 
 # VPC in eu-west-1
@@ -10,20 +11,20 @@ module "vpc_config_eu_west_1" {
   vpc_configs = {
     "ireland" = {
       core = {
-        primary        = {{ CorePriCIDR }}
-        secondary      = {{ CoreSecCIDR }}
-        subnets_per_az = { public_subnets = {{ CorepublicSubnetsPerAZ }}, private_subnets = {{ CoreprivateSubnetsPerAZ }} }
-        attach_igw     = {{ CoreIgw }}
+        primary        = {{ item.CorePriCIDR }}
+        secondary      = {{ item.CoreSecCIDR }}
+        subnets_per_az = { public_subnets = {{ item.CorepublicSubnetsPerAZ }}, private_subnets = {{ CoreprivateSubnetsPerAZ }} }
+        attach_igw     = {{ item.CoreIgw }}
       }
       edge = {
-        primary        = {{ EdgePriCIDR }}
-        secondary      = {{ EdgeSecCIDR }}
-        subnets_per_az = { public_subnets = {{ EdgepublicSubnetsPerAZ }}, private_subnets = {{ EdgeprivateSubnetsPerAZ }} }
-        attach_igw     = {{ EdgeIgw }}
+        primary        = {{ item.EdgePriCIDR }}
+        secondary      = {{ item.EdgeSecCIDR }}
+        subnets_per_az = { public_subnets = {{ item.EdgepublicSubnetsPerAZ }}, private_subnets = {{ EdgeprivateSubnetsPerAZ }} }
+        attach_igw     = {{ item.EdgeIgw }}
       }
     }
   }
-  azs_per_vpc = {{ azsperVPC }}
+  azs_per_vpc = {{ item.azsperVPC }}
 
   tags = {
     Environment = "dev"
