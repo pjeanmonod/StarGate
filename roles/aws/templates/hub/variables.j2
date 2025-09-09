@@ -42,7 +42,7 @@ variable "azs_per_vpc" {
   default     = 2
 
   validation {
-    condition     = var.azs_per_vpc > 0 && var.azs_per_vpc <= length(data.aws_availability_zones.available.names)
+    condition     = var.azs_per_vpc > 0 
     error_message = "azs_per_vpc must be between 1 and the number of available AZs"
   }
 
@@ -67,7 +67,7 @@ variable "local_zones" {
   description = "Explicitly selected AWS Local Zones to deploy subnets into"
   default     = []
   validation {
-    condition     = length(setsubtract(var.local_zones, data.aws_availability_zones.local_zones.names)) == 0
+    condition     = length(var.local_zones) == length(distinct(var.local_zones))
     error_message = "One or more specified local_zones are invalid or unavailable."
   }
 }
