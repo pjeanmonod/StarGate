@@ -40,6 +40,6 @@
     - name: create main
       template:
         src: hub/main.j2
-        dest: /data/work/main.tf
+        dest: /data/work/hub/main.tf
     
 
