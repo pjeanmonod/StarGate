@@ -17,6 +17,4 @@
         project_path: "{{project_dir}}"
         state: absent
         force_init: true
-        variables:
-          tag: "{{ tag }}"
       register: destroy
