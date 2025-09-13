@@ -12,9 +12,11 @@
       set_fact:
         project_dir: "/data/work"
 
-    - name: terraform init and apply
+    - name: destroy
       community.general.terraform:
         project_path: "{{project_dir}}"
         state: absent
         force_init: true
-      register: plan
+        variables:
+          tag: "{{ tag }}"
+      register: destroy
