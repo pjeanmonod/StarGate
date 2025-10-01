@@ -17,7 +17,28 @@
         project_path: "{{project_dir}}"
         state: present
         force_init: true
-      register: plan
+      register: tf_out
+
+
+    - name: Debug outputs (sanity check)
+      debug:
+        var: tf_out.outputs
+
+    - name: Push terraform outputs to Django
+      uri:
+        url: "https:///13.48.107.144:8000/api/infra/"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ django_api_token }}"
+          Content-Type: "application/json"
+        body_format: json
+        body: >
+          {
+            "key": "{{ item.key }}",
+            "value": {{ item.value.value | to_json }}
+          }
+        status_code: 201
+      loop: "{{ tf_out.outputs | dict2items }}"
             
 
 
