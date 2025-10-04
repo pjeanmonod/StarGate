@@ -25,7 +25,7 @@
 
     - name: Push terraform outputs to Django
       uri:
-        url: "https:///51.20.95.48:8000/api/infra/" 
+        url: "https:///13.48.107.144:8000/api/infra/" 
         method: POST
         headers:
           X-API-Key: "{{ lookup('env', 'DJANGO_API_KEY') }}"
