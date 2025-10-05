@@ -17,6 +17,7 @@
         project_path: "{{project_dir}}"
         state: present
         force_init: true
+        get_outputs: yes
       register: tf_out
 
     - name: Debug outputs (sanity check)
