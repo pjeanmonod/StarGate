@@ -17,8 +17,19 @@
         project_path: "{{project_dir}}"
         state: present
         force_init: true
-        get_outputs: yes
       register: tf_out
+
+    - name: Get Terraform outputs (JSON)
+      command: terraform output -json
+      args:
+        chdir: "{{ project_dir }}"
+      register: tf_out_raw
+      when: tf_apply is succeeded
+
+    - name: Parse Terraform outputs
+      set_fact:
+        tf_out: "{{ tf_out_raw.stdout | from_json }}"
+      when: tf_out_raw.stdout is defined and tf_out_raw.stdout | length > 0
 
     - name: Debug outputs (sanity check)
       debug:
