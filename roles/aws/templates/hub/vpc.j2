@@ -40,3 +40,18 @@ resource "aws_vpc_ipv4_cidr_block_association" "edge_secondary" {
   vpc_id     = aws_vpc.edge[each.key].id
   cidr_block = each.value.edge.secondary
 }
+
+#─────────────────────────────
+# Terraform outputs 
+#─────────────────────────────
+# Core VPC IDs
+output "core_vpc_ids" {
+  description = "Core VPC IDs keyed by VPC name"
+  value = { for k, v in aws_vpc.core : k => v.id }
+}
+
+# Edge VPC IDs
+output "edge_vpc_ids" {
+  description = "Edge VPC IDs keyed by VPC name"
+  value = { for k, v in aws_vpc.edge : k => v.id }
+}
