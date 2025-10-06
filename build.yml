@@ -17,13 +17,14 @@
         project_path: "{{project_dir}}"
         state: present
         force_init: true
-      register: tf_out
+      register: tf_apply
 
     - name: Get Terraform outputs (JSON)
       command: terraform output -json
       args:
         chdir: "{{ project_dir }}"
       register: tf_out_raw
+      changed_when: false 
 
     - name: Parse Terraform outputs
       set_fact:
@@ -49,6 +50,7 @@
           }
         status_code: 201
       loop: "{{ tf_out.outputs | dict2items }}"
+      when: tf_out is defined
 
  
    
