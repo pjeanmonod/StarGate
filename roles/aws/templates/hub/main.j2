@@ -26,3 +26,13 @@ module "vpc_config_eu_west_1" {
     Client      = "client-x"
   }
 }
+
+output "core_vpc_ids" {
+  description = "Core VPC IDs from the vpc module"
+  value       = module.vpc_config_eu_west_1.core_vpc_ids
+}
+
+output "edge_vpc_ids" {
+  description = "Edge VPC IDs from the vpc module"
+  value       = module.vpc_config_eu_west_1.edge_vpc_ids
+}
