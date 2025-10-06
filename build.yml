@@ -33,7 +33,8 @@
 
     - name: Debug outputs (sanity check)
       debug:
-        var: tf_out.outputs
+        var: tf_out
+      when: tf_out is defined  
 
     - name: Push terraform outputs to Django
       uri:
@@ -49,7 +50,7 @@
             "value": {{ item.value.value | to_json }}
           }
         status_code: 201
-      loop: "{{ tf_out.outputs | dict2items }}"
+      loop: "{{ tf_out | default({}) | dict2items }}"
       when: tf_out is defined
 
  
