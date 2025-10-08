@@ -169,3 +169,27 @@ output "edge_vpc_ids" {
   description = "Edge VPC IDs keyed by VPC name"
   value = { for k, v in aws_vpc.edge : k => v.id }
 }
+
+# Core private subnets
+output "core_private_subnet_ids" {
+  description = "Core private subnets keyed by VPC"
+  value = { for k, v in aws_subnet.core_private : k => v.*.id }
+}
+
+# Core public subnets
+output "core_public_subnet_ids" {
+  description = "Core public subnets keyed by VPC"
+  value = { for k, v in aws_subnet.core_public : k => v.*.id }
+}
+
+# Edge private subnets
+output "edge_private_subnet_ids" {
+  description = "Edge private subnets keyed by VPC"
+  value = { for k, v in aws_subnet.edge_private : k => v.*.id }
+}
+
+# Edge public subnets
+output "edge_public_subnet_ids" {
+  description = "Edge public subnets keyed by VPC"
+  value = { for k, v in aws_subnet.edge_public : k => v.*.id }
+}
