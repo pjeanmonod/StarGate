@@ -37,22 +37,22 @@ output "edge_vpc_ids" {
   value       = module.vpc_config_eu_west_1.edge_vpc_ids
 }
 
-output "core_private_subnet_ids" {
-  description = "Core private subnet IDs from the VPC module"
-  value       = module.vpc_config_eu_west_1.core_private_subnet_ids
+output "core_private_subnet_cidrs" {
+  description = "Core private subnet CIDRs from the VPC module"
+  value       = module.vpc_config_eu_west_1.core_private_subnet_cidrs
 }
 
-output "core_public_subnet_ids" {
-  description = "Core public subnet IDs from the VPC module"
-  value       = module.vpc_config_eu_west_1.core_public_subnet_ids
+output "core_public_subnet_cidrs" {
+  description = "Core public subnet CIDRs from the VPC module"
+  value       = module.vpc_config_eu_west_1.core_public_subnet_cidrs
 }
 
-output "edge_private_subnet_ids" {
-  description = "Edge private subnet IDs from the VPC module"
-  value       = module.vpc_config_eu_west_1.edge_private_subnet_ids
+output "edge_private_subnet_cidrs" {
+  description = "Edge private subnet CIDRs from the VPC module"
+  value       = module.vpc_config_eu_west_1.edge_private_subnet_cidrs
 }
 
-output "edge_public_subnet_ids" {
-  description = "Edge public subnet IDs from the VPC module"
-  value       = module.vpc_config_eu_west_1.edge_public_subnet_ids
+output "edge_public_subnet_cidrs" {
+  description = "Edge public subnet CIDRs from the VPC module"
+  value       = module.vpc_config_eu_west_1.edge_public_subnet_cidrs
 }
