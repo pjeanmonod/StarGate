@@ -171,25 +171,25 @@ output "edge_vpc_ids" {
 }
 
 # Core private subnets
-output "core_private_subnet_ids" {
-  description = "Core private subnets keyed by VPC"
-  value = { for k, v in aws_subnet.core_private : k => v.*.id }
+output "core_private_subnet_cidrs" {
+  description = "Core private subnet CIDR blocks keyed by VPC"
+  value = { for k, v in aws_subnet.core_private : k => v.*.cidr_block }
 }
 
 # Core public subnets
-output "core_public_subnet_ids" {
-  description = "Core public subnets keyed by VPC"
-  value = { for k, v in aws_subnet.core_public : k => v.*.id }
+output "core_public_subnet_cidrs" {
+  description = "Core public subnet CIDR blocks keyed by VPC"
+  value = { for k, v in aws_subnet.core_public : k => v.*.cidr_block }
 }
 
 # Edge private subnets
-output "edge_private_subnet_ids" {
-  description = "Edge private subnets keyed by VPC"
-  value = { for k, v in aws_subnet.edge_private : k => v.*.id }
+output "edge_private_subnet_cidrs" {
+  description = "Edge private subnet CIDR blocks keyed by VPC"
+  value = { for k, v in aws_subnet.edge_private : k => v.*.cidr_block }
 }
 
 # Edge public subnets
-output "edge_public_subnet_ids" {
-  description = "Edge public subnets keyed by VPC"
-  value = { for k, v in aws_subnet.edge_public : k => v.*.id }
+output "edge_public_subnet_cidrs" {
+  description = "Edge public subnet CIDR blocks keyed by VPC"
+  value = { for k, v in aws_subnet.edge_public : k => v.*.cidr_block }
 }
