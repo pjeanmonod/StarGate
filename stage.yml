@@ -19,4 +19,11 @@
         plan_file: tfplan.out
         force_init: true
       register: plan
+
+    - name: print plan for middleware
+      debug:
+        msg:
+          - "===BEGIN_TERRAFORM_PLAN==="
+          - "{{ plan_text.stdout }}"
+          - "===END_TERRAFORM_PLAN==="
             
