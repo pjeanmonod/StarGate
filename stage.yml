@@ -20,6 +20,10 @@
         force_init: true
       register: plan
 
+    - name: show terraform plan text
+      command: terraform show -no-color "{{ project_dir }}/tfplan.out"
+      register: plan_text
+
     - name: print plan for middleware
       debug:
         msg:
