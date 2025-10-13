@@ -4,7 +4,6 @@
   connection: local
 
   roles:
-
     - role: aws
 
   tasks:
@@ -12,9 +11,14 @@
       set_fact:
         project_dir: "/data/work"
 
+    - name: initialize Terraform
+      command: terraform init -input=false
+      args:
+        chdir: "{{ project_dir }}"
+
     - name: terraform plan
       community.general.terraform:
-        project_path: "{{project_dir}}"
+        project_path: "{{ project_dir }}"
         state: planned
         plan_file: tfplan.out
         force_init: true
@@ -30,4 +34,3 @@
           - "===BEGIN_TERRAFORM_PLAN==="
           - "{{ plan_text.stdout }}"
           - "===END_TERRAFORM_PLAN==="
-            
