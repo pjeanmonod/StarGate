@@ -7,16 +7,19 @@
     - role: aws
 
   tasks:
-    - name: set project directory
+    - name: Set project directory
       set_fact:
         project_dir: "/data/work"
 
-    - name: initialize Terraform
+    - name: Ensure Terraform is initialized
       command: terraform init -input=false
       args:
         chdir: "{{ project_dir }}"
+      register: init_result
+      failed_when: init_result.rc != 0
+      changed_when: "'Terraform has been successfully initialized!' in init_result.stdout"
 
-    - name: terraform plan
+    - name: Run Terraform plan
       community.general.terraform:
         project_path: "{{ project_dir }}"
         state: planned
@@ -24,11 +27,14 @@
         force_init: true
       register: plan
 
-    - name: show terraform plan text
-      command: terraform show -no-color "{{ project_dir }}/tfplan.out"
+    - name: Show Terraform plan text
+      command: terraform show -no-color tfplan.out
+      args:
+        chdir: "{{ project_dir }}"
       register: plan_text
+      failed_when: plan_text.rc != 0
 
-    - name: print plan for middleware
+    - name: Print plan for middleware
       debug:
         msg:
           - "===BEGIN_TERRAFORM_PLAN==="
