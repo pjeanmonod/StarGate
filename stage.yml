@@ -36,7 +36,4 @@
 
     - name: Print plan for middleware
       debug:
-        msg:
-          - "===BEGIN_TERRAFORM_PLAN==="
-          - "{{ plan_text.stdout }}"
-          - "===END_TERRAFORM_PLAN==="
+        msg: "===BEGIN_TERRAFORM_PLAN===\n{{ plan_text.stdout }}\n===END_TERRAFORM_PLAN==="
