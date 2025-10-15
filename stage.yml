@@ -43,7 +43,7 @@
           Content-Type: "application/json"
         body: |
           {
-            "job_id": "{{ workflow_job_id + 2 }}",
+            "job_id": "{{ job_id }}",
             "stdout": "{{ terraform_plan.stdout | to_json }}"
           }
         body_format: json
