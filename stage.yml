@@ -34,6 +34,18 @@
       register: plan_text
       failed_when: plan_text.rc != 0
 
-    - name: Print plan for middleware
-      debug:
-        msg: "===BEGIN_TERRAFORM_PLAN===\n{{ plan_text.stdout }}\n===END_TERRAFORM_PLAN==="
+    - name: Send Terraform plan stdout to middleware
+      uri:
+        url: "http://13.48.107.144:8000/api/cloud01/infra/terraform/plan/"
+        method: POST
+        headers:
+          X-API-Key: "{{ lookup('env', 'DJANGO_API_KEY') }}"
+          Content-Type: "application/json"
+        body: |
+          {
+            "job_id": "{{ workflow_job_id + 2 }}",
+            "stdout": "{{ terraform_plan.stdout | to_json }}"
+          }
+        body_format: json
+        status_code: 200
+        validate_certs: no   
