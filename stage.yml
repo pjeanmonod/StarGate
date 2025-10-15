@@ -48,7 +48,7 @@
         body: 
           
           job_id: "{{ job_id }}"
-          stdout: "{{ plan_text.stdout }}"    
+          plan_text: "{{ plan_text.stdout }}"    
         body_format: json
         status_code: 200
         validate_certs: no   
