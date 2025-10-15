@@ -48,7 +48,7 @@
         body: |
           {
             "job_id": "{{ job_id }}",
-            "stdout": "{{ terraform_plan.stdout | to_json }}"
+            "stdout": "{{ plan_text.stdout | to_json }}"
           }
         body_format: json
         status_code: 200
