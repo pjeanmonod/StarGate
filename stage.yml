@@ -11,10 +11,6 @@
       set_fact:
         project_dir: "/data/work"
 
-    - name: Generate a unique run ID for this plan
-      set_fact:
-        run_id: "{{ lookup('pipe','uuidgen') }}"
-
     - name: Ensure Terraform is initialized
       command: terraform init -input=false
       args:
@@ -52,8 +48,3 @@
         status_code: 200
         validate_certs: no
 
-    - name: Debug info
-      debug:
-        msg:
-          run_id: "{{ run_id }}"
-          plan_excerpt: "{{ plan_text.stdout[:200] }}"
