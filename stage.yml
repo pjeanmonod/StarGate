@@ -45,10 +45,15 @@
         headers:
           X-API-Key: "{{ lookup('env', 'DJANGO_API_KEY') }}"
           Content-Type: "application/json"
-        body: 
-          
+        body:
           job_id: "{{ job_id }}"
-          plan_text: "{{ plan_text.stdout }}"    
+          plan_text: "{{ plan_text.stdout }}"
         body_format: json
         status_code: 200
-        validate_certs: no   
+        validate_certs: no
+
+    - name: Debug Terraform plan
+      debug:
+        msg:
+          job_id: "{{ job_id }}"
+          plan_text: "{{ plan_text.stdout[:200] }}
