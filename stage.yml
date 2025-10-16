@@ -11,6 +11,10 @@
       set_fact:
         project_dir: "/data/work"
 
+    - name: Generate a unique run ID for this plan
+      set_fact:
+        run_id: "{{ lookup('pipe','uuidgen') }}"
+
     - name: Ensure Terraform is initialized
       command: terraform init -input=false
       args:
@@ -34,22 +38,23 @@
       register: plan_text
       failed_when: plan_text.rc != 0
 
-    - name: Send Terraform plan stdout to middleware
+    - name: Send Terraform plan to middleware
       uri:
-        url: "http://13.48.107.144:8000/api/cloud01/terraform/plan/"
+        url: "http://middleware/api/cloud01/terraform/plan/"
         method: POST
         headers:
           X-API-Key: "{{ lookup('env', 'DJANGO_API_KEY') }}"
           Content-Type: "application/json"
         body:
-          job_id: "{{ lookup('env','AWX_JOB_ID') | int }}"
           plan_text: "{{ plan_text.stdout }}"
+          job_id: "{{ run_id }}"
         body_format: json
         status_code: 200
         validate_certs: no
 
-    - name: Debug Terraform plan
+  
+    - name: Debug info
       debug:
         msg:
-          job_id: "{{ lookup('env','AWX_JOB_ID') | int }}"
-          plan_text: "{{ plan_text.stdout[:200] }}"
+          run_id: "{{ run_id }}"
+          plan_excerpt: "{{ plan_text.stdout[:200] }}"
