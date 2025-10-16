@@ -34,9 +34,13 @@
       register: plan_text
       failed_when: plan_text.rc != 0
 
-    - name: Set stage job ID
+    - name: Capture child workflow job ID
       set_fact:
-        job_id: "{{ source_workflow_job_id | int + 2 }}"
+        child_job_id: "{{ workflow_job_id }}"
+
+    - name: Show child workflow job ID
+      debug:
+        msg: "The child workflow job ID is {{ child_job_id }}"
 
 
     - name: Send Terraform plan stdout to middleware
@@ -56,5 +60,5 @@
     - name: Debug Terraform plan
       debug:
         msg:
-          job_id: "{{ job_id }}"
+          job_id: "{{ workflow_job_id }}"
           plan_text: "{{ plan_text.stdout[:200] }}"
