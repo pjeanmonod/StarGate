@@ -56,4 +56,4 @@
       debug:
         msg:
           job_id: "{{ job_id }}"
-          plan_text: "{{ plan_text.stdout[:200] }}
+          plan_text: "{{ plan_text.stdout[:200] }}"
