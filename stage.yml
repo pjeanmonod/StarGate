@@ -42,7 +42,7 @@
           X-API-Key: "{{ lookup('env', 'DJANGO_API_KEY') }}"
           Content-Type: "application/json"
         body:
-          plan_text: "{{ plan_text.stdout[:200] }}"
+          plan_text: "{{ plan_text.stdout }}"
           job_id: "{{ run_id }}"
         body_format: json
         status_code: 200
