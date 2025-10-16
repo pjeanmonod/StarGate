@@ -42,7 +42,7 @@
           X-API-Key: "{{ lookup('env', 'DJANGO_API_KEY') }}"
           Content-Type: "application/json"
         body:
-          job_id: "{{ job_id }}"
+          job_id: "{{ lookup('env','AWX_JOB_ID') | int }}"
           plan_text: "{{ plan_text.stdout }}"
         body_format: json
         status_code: 200
@@ -51,5 +51,5 @@
     - name: Debug Terraform plan
       debug:
         msg:
-          job_id: "{{ awx_job_id }}"
+          job_id: "{{ lookup('env','AWX_JOB_ID') | int }}"
           plan_text: "{{ plan_text.stdout[:200] }}"
