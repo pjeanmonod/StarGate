@@ -40,7 +40,7 @@
 
     - name: Send Terraform plan to middleware
       uri:
-        url: http://13.48.107.144:8000/api/cloud01/terraform/plan/"
+        url: "http://13.48.107.144:8000/api/cloud01/terraform/plan/"
         method: POST
         headers:
           X-API-Key: "{{ lookup('env', 'DJANGO_API_KEY') }}"
