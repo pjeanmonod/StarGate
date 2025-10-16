@@ -36,7 +36,7 @@
 
     - name: Set stage job ID
       set_fact:
-       job_id: "{{ lookup('env', 'AWX_JOB_ID') | int }}"
+        job_id: "{{ (lookup('env','AWX_PARENT_JOB_ID') | int) + 2 }}"
 
     - name: Send Terraform plan stdout to middleware
       uri:
