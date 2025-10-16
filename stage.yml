@@ -36,15 +36,8 @@
 
     - name: Set stage job ID
       set_fact:
-        job_id: "{{ (lookup('env','SOURCE_WORKFLOW_JOB_ID') | int) + 2 }}"
+        job_id: "{{ source_workflow_job_id | int + 2 }}"
 
-    - name: Show AWX-related env vars
-      debug:
-        msg: 
-          - "AWX_JOB_ID={{ lookup('env','AWX_JOB_ID') }}"
-          - "AWX_PARENT_JOB_ID={{ lookup('env','AWX_PARENT_JOB_ID') }}"
-          - "SOURCE_WORKFLOW_JOB_ID={{ lookup('env','SOURCE_WORKFLOW_JOB_ID') }}"
-          - "SOURCE_WORKFLOW_ID={{ lookup('env','SOURCE_WORKFLOW_ID') }}"
 
     - name: Send Terraform plan stdout to middleware
       uri:
