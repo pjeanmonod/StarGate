@@ -40,21 +40,20 @@
 
     - name: Send Terraform plan to middleware
       uri:
-          url: http://13.48.107.144:8000/api/cloud01/terraform/plan/"
-          method: POST
-          headers:
-            X-API-Key: "{{ lookup('env', 'DJANGO_API_KEY') }}"
-            Content-Type: "application/json"
-          body:
-            plan_text: "{{ plan_text.stdout }}"
-            job_id: "{{ run_id }}"
-      body_format: json
-      status_code: 200
-      validate_certs: no
+        url: http://13.48.107.144:8000/api/cloud01/terraform/plan/"
+        method: POST
+        headers:
+          X-API-Key: "{{ lookup('env', 'DJANGO_API_KEY') }}"
+          Content-Type: "application/json"
+        body:
+          plan_text: "{{ plan_text.stdout }}"
+          job_id: "{{ run_id }}"
+        body_format: json
+        status_code: 200
+        validate_certs: no
 
     - name: Debug info
       debug:
         msg:
           run_id: "{{ run_id }}"
           plan_excerpt: "{{ plan_text.stdout[:200] }}"
-
