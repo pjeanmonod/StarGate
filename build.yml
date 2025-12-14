@@ -45,10 +45,10 @@
           Content-Type: "application/json"
         body_format: json
         body:
-          run_id: "{{ run_id }}"              
+          job_id: "{{ run_id }}"              
           key: "{{ item.key }}"
           value: "{{ item.value.value }}"
-        status_code: 201
+        status_code: [200,201]
       loop: "{{ tf_out | default({}) | dict2items }}"
       when: tf_out is defined
 
