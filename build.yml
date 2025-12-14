@@ -45,7 +45,7 @@
           Content-Type: "application/json"
         body_format: json
         body:
-          job_id: "{{ run_id }}"              
+          run_id: "{{ run_id }}"              
           key: "{{ item.key }}"
           value: "{{ item.value.value }}"
         status_code: 201
