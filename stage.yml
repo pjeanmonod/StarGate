@@ -43,7 +43,7 @@
           Content-Type: "application/json"
         body:
           plan_text: "{{ plan_text.stdout }}"
-          job_id: "{{ run_id }}"
+          run_id: "{{ run_id }}"
         body_format: json
         status_code: 200
         validate_certs: no
